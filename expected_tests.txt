@@ -1,0 +1,33 @@
+Deve conseguir criar um personagem de raça do tipo NORMAL com sucesso e ele deve estar no nível 1
+Deve conseguir criar um personagem de raça do tipo ALIADA com sucesso e ele deve estar no nível 10
+Personagem recém criado não deve possuir equipamentos
+Personagem recém criado não deve possuir dinheiro
+Deve receber +2 de vida e +1 de vigor ao subir dois niveis
+Deve conseguir criar um personagem com raça de expansão se já possuir a expansão
+Deve conseguir criar um personagem com raça aliada se já possuir outro personagem com o lvl mínimo necessário
+Deve conseguir finalizar a batalha e obter um vencedor com sucesso
+Deve conseguir declarar empate em uma batalha  
+Deve calcular o vigor corretamente com o atributo base de sua raça + equipamentos
+Deve calcular a vida corretamente com o atributo base de sua raça + equipamentos
+Deve calcular o dano corretamente com o atributo base de sua raça + equipamentos
+Deve conseguir concluir uma missão corretamente e receber seus prêmios
+Deve conseguir concluir uma missão de expansão corretamente e receber seus prêmios se já possuir a expansão
+Deve conseguir comprar um item do tipo VIGOR com sucesso
+Deve conseguir comprar um item do tipo DANO com sucesso
+Deve conseguir comprar um item do tipo VIDA com sucesso
+Deve conseguir comprar um item do tipo EXPANSAO com sucesso
+Deve conseguir comprar um equipamento de alguma expansão apenas se já tiver obtido a expansão
+Deve conseguir vender um item e receber metade do preço de volta
+Deve subtituir um item equipado se o item recém comprado for do mesmo tipo que o que já está sendo usado
+Deve validar o nível do personagem para permitir a venda de itens com um nível mínimo necessário
+Deve conseguir aplicar o cheat WILLIDAN e subir +20 níveis do personagem selecionado
+Deve conseguir aplicar o cheat GUSTHRALL e dar +2000 de dinheiro para o personagem selecionado
+Deve conseguir aplicar o cheat ANDUINNUNES e dar +20000 de dinheiro para todos os personagens
+Deve conseguir aplicar o cheat JULICHKING e subir +5 níveis de todos os personagens
+Deve conseguir aplicar o cheat KEVINERZUL e receber o item Arco do callback infinito
+Deve conseguir aplicar o cheat FABYOGGSARON e receber o item Talismã do Polimorfismo
+Deve conseguir aplicar o cheat PABLOTHAR e receber o item Talismã do Polimorfismo
+Deve conseguir aplicar o cheat VITOREXXAR e receber o item Talismã do Polimorfismo
+Deve conseguir aplicar o cheat ZORZARTHAS e receber o item Talismã Indexado
+Deve conseguir aplicar o cheat DIANDRAKA e receber o item Talismã Indexado
+Deve conseguir aplicar o cheat SERGIORGRIM e receber o item Armadura de Flexbox
