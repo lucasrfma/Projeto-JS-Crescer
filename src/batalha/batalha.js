@@ -1,9 +1,11 @@
-export function batalhaEntrePersonagens(personagemA, personagemB)
+import { getItens } from "../services/requests/axios"
+
+export function batalhaEntrePersonagens(personagemA, personagemB,items)
 {
     // dano A - Vigor B
-    const danoEfetivoA = calcularDanoEfetivo(personagemA,personagemB);
+    const danoEfetivoA = _calcularDanoEfetivo(personagemA,personagemB,items);
     // dano B - Vigor A
-    const danoEfetivoB = calcularDanoEfetivo(personagemB,personagemA);
+    const danoEfetivoB = _calcularDanoEfetivo(personagemB,personagemA,items);
 
     if(danoEfetivoA == 0)
     {
@@ -24,8 +26,8 @@ export function batalhaEntrePersonagens(personagemA, personagemB)
         }
         else
         {
-            const vidaTotalA = calcularVida(personagemA);
-            const vidaTotalB = calcularVida(personagemB);
+            const vidaTotalA = _calcularVida(personagemA,items);
+            const vidaTotalB = _calcularVida(personagemB,items);
 
             const rodadasParaGanharA = Math.ceil(vidaTotalB/danoEfetivoA);
             const rodadasParaGanharB = Math.ceil(vidaTotalA/danoEfetivoB);
@@ -51,10 +53,10 @@ export function batalhaEntrePersonagens(personagemA, personagemB)
     }
 }
 
-export function calcularDanoEfetivo(personagemA,personagemB)
+export function _calcularDanoEfetivo(personagemA,personagemB,items)
 {
-    const danoBruto = calcularDanoBruto(personagemA);
-    const vigor = calcularVigor(personagemB);
+    const danoBruto = _calcularDanoBruto(personagemA,items);
+    const vigor = _calcularVigor(personagemB,items);
     
     const danoEfetivo = danoBruto - vigor;
 
@@ -65,39 +67,39 @@ export function calcularDanoEfetivo(personagemA,personagemB)
     return danoEfetivo;
 }
 
-export function calcularDanoBruto(personagem)
+export function _calcularDanoBruto(personagem,items)
 {
     for( let i = 0; i < personagem.equipamentos.length; ++i)
     {
-        if(personagem.equipamentos[i].tipo === 'DANO')
+        if(items[personagem.equipamentos[i]-1].tipo === 'DANO')
         {
-            return  personagem.dano + personagem.equipamentos[i].aprimoramento;
+            return  personagem.dano + items[personagem.equipamentos[i]-1].aprimoramento;
             
         }
     }
     return personagem.dano;
 }
 
-export function calcularVigor(personagem)
+export function _calcularVigor(personagem,items)
 {
     for( let i = 0; i < personagem.equipamentos.length; ++i)
     {
-        if(personagem.equipamentos[i].tipo === 'VIGOR')
+        if(items[personagem.equipamentos[i]-1].tipo === 'VIGOR')
         {
-            return  personagem.vigor + personagem.equipamentos[i].aprimoramento;
+            return  personagem.vigor + items[personagem.equipamentos[i]-1].aprimoramento;
             
         }
     }
     return personagem.vigor;
 }
 
-export function calcularVida(personagem)
+export function _calcularVida(personagem,items)
 {
     for( let i = 0; i < personagem.equipamentos.length; ++i)
     {
-        if(personagem.equipamentos[i].tipo === 'VIDA')
+        if(items[personagem.equipamentos[i]-1].tipo === 'VIDA')
         {
-            return  personagem.vida + personagem.equipamentos[i].aprimoramento;
+            return  personagem.vida + items[personagem.equipamentos[i]-1].aprimoramento;
             
         }
     }
