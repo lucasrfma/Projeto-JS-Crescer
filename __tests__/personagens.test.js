@@ -1,5 +1,5 @@
 import { getRaces } from "../src/services/requests/axios"
-import { criarPersonagem, uparPersonagem } from '../personagens'
+import { criarPersonagem, uparPersonagem } from '../src/personagens/personagens'
 
 let racas
 let expansoes
@@ -87,14 +87,14 @@ describe('testes criação personagem', () => {
       nome: 'Inalvejavel',
       raca: 'Orc',
       equipamentos: [],
-      nivel: 2,
+      nivel: 1,
       dinheiro: 0,
       vida: 6,
       vigor: 4,
       dano: 4
     }
 
-    const personagemObtido = uparPersonagem(personagem)
+    const personagemObtido = uparPersonagem(personagem, 2)
 
     expect(personagemObtido).toEqual(personagemEsperado)
   })

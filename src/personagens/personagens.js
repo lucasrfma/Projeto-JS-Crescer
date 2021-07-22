@@ -37,20 +37,23 @@ export const criarPersonagem = (nome, idRaca, racas, expansoes = [0], personagen
   return personagem
 }
 
-export const uparPersonagem = (personagem) => {
-  const novoNivel = (personagem.nivel + 1)
+export const uparPersonagem = (personagem, numeroNiveis) => {
+  if (numeroNiveis >= 1) {
+    const novoNivel = (personagem.nivel + 1)
 
-  if (novoNivel % 2 == 1) {
-    return {
-      ...personagem,
-      nivel: novoNivel,
-      vida: (personagem.vida + 2),
-      vigor: (personagem.vigor + 1)
+    if (novoNivel % 2 == 1) {
+      return uparPersonagem({
+        ...personagem,
+        nivel: novoNivel,
+        vida: (personagem.vida + 2),
+        vigor: (personagem.vigor + 1)
+      }, numeroNiveis - 1)
     }
-  }
 
-  return {
-    ...personagem,
-    nivel: novoNivel
+    return uparPersonagem({
+      ...personagem,
+      nivel: novoNivel
+    }, numeroNiveis - 1)
   }
+  return { ...personagem }
 }
