@@ -91,6 +91,19 @@ describe('Testes de identificação de vencedor', () => {
         const resultadoEsperado = 0;
           
         expect(batalhaEntrePersonagens(varian,thrall)).toBe(resultadoEsperado);
+    }),
+
+    it('Deve depender da sorte quando ambos os personagens precisarem do mesmo numero de turnos para derrotar o outro', () => {
+        let resultadoMedio = 0;
+
+        for(let i = 1; i <= 2000; ++i)
+        {
+            resultadoMedio += (batalhaEntrePersonagens(varianForte,varianForte)-resultadoMedio)/i;
+        }
+
+        const resultadoEsperado = 1.5;
+
+        expect(resultadoMedio).toBeCloseTo(resultadoEsperado,1)
     })
 });
 
