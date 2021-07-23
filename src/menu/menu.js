@@ -24,16 +24,17 @@ async function main()
     let opcao;
     do
     {
-        opcao = await useQuestion(`
-        World of E-crescer
+        console.clear();
+        opcao = (await useQuestion(`
+                World of E-crescer
 
-           Menu Jogador
+                   Menu Jogador
 
 1 - Criar Personagem
 2 - Selecionar Personagem
 
 X - Sair
-        `);
+        `)).toUpperCase();
 
         switch(opcao)
         {
@@ -42,7 +43,7 @@ X - Sair
                 localStorage.setObject('personagens',personagens);
                 break;
             case '2': 
-                await selecionarJogador(personagens);
+                await selecionarPersonagem(personagens,expansoes,races,items,quests);
                 break;
             case 'X':
                 break;
@@ -57,12 +58,50 @@ X - Sair
 
 }
 
+async function selecionarPersonagem(personagens,expansoes,races,items,quests)
+{
+    console.clear();
+    console.log(`
+    World of E-crescer
+    
+    Selecionar Personagem
+    
+    Escolha uma opção:
+    
+    0 - Cancelar escolha de personagem
+    `);
+    
+    for(let i = 0; i < personagens.length; ++i)
+    {
+        console.log( (i + 1) + ' - ' + personagens[i].nome);
+    }
+    let continuar = true;
+    do
+    {
+        let idPersonagem = parseInt(await useQuestion(''));
+        if( idPersonagem == undefined){
+            console.log('Digite uma opção');
+        }
+        else if( idPersonagem == NaN || idPersonagem < 0 || idPersonagem > personagens.length)
+        {
+            console.log('Opção inválida!');
+        }
+        else
+        {
+            await menuPersonagem();
+            continuar = false;
+        }
+    }while(continuar);
+    
+}
+
 async function criarJogador(personagens,expansoes,races)
 {
+    console.clear();
     let nome = await useQuestion(`
-        World of E-crescer
+                World of E-crescer
 
-       Criação de Personagem
+                Criar de Personagem
 
     Digite o nome do personagem:
     `);
@@ -70,7 +109,7 @@ async function criarJogador(personagens,expansoes,races)
     console.log(`
     Escolha a raça:
 
-0 - Cancelar Criação de Personagem
+0 - Cancelar criação de personagem
 `);
 
     for(let i = 0; i < races.length; ++i)
