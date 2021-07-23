@@ -2,6 +2,7 @@
   "name": "world-of-ecrescer",
   "scripts": {
     "start": "babel-node index.js",
+    "menu": "babel-node ./src/menu/menu.js",
     "test": "jest"
   },
   "devDependencies": {
