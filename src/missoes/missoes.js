@@ -1,7 +1,13 @@
+import { uparPersonagem } from "../personagens/personagens";
+
 export function selecionarMissao(personagem, missao){
     if(missao.hasOwnProperty('idExpansao')){
-        if(personagem.expansoes.includes(missao.idExpansao)){
-            return missao
+        if(personagem.hasOwnProperty('expansoes')){
+            if(personagem.expansoes.includes(missao.idExpansao)){
+                return missao
+            }else{
+                return -1
+            }
         }else{
             return -1
         }
@@ -30,8 +36,8 @@ export function realizarMissao(personagem, missao){
 }
 
 export function receberRecompensasMissao(personagem, missao){
-    const clonePersonagem = Object.assign({}, personagem)
-    clonePersonagem.nivel += missao.niveisRecebidos
+    let clonePersonagem = Object.assign({}, personagem)
+    clonePersonagem = uparPersonagem(clonePersonagem, missao.niveisRecebidos)
     clonePersonagem.dinheiro += missao.dinheiroRecebido
     return clonePersonagem
 }
