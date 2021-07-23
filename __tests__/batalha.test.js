@@ -1,4 +1,5 @@
-import { getItens } from "../src/services/requests/axios";
+import { getItens,getRaces } from "../src/services/requests/axios";
+import { criarPersonagem, uparPersonagem } from '../src/personagens/personagens';
 import {batalhaEntrePersonagens,
         _calcularDanoBruto,
         _calcularDanoEfetivo,
@@ -6,9 +7,11 @@ import {batalhaEntrePersonagens,
         _calcularVigor} from '../src/batalha/batalha';
 
 let items;
+let races;
 
 beforeAll(async () => {
     items = await getItens();
+    races = await getRaces()
 });
 
 const varian = {
@@ -102,6 +105,8 @@ describe('Testes de Cálculo de Atributos', () => {
 
     // Testes obrigatórios (esperar a parte de criação de char para testar)
     it('Deve calcular o vigor corretamente com o atributo base de sua raça + equipamentos', () => {
+        
+        const personagemObtido = criarPersonagem('Varian', 5, races);
         
     }),
     
