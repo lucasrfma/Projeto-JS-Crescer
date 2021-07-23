@@ -1,16 +1,20 @@
-import { getRaces, getItens } from "../src/services/requests/axios"
+import racasParaTestes from '../racas-para-testes.json'
+import itensParaTestes from '../itens-para-testes.json'
+
 import { criarPersonagem, uparPersonagem } from '../src/personagens/personagens'
-import { verificarSeHaItemMesmoTipoEquipado,
-          equiparItem } from '../src/personagens/equipamentos'
+import {
+  verificarSeHaItemMesmoTipoEquipado,
+  equiparItem
+} from '../src/personagens/equipamentos'
 
 let racas
 let expansoes
 let personagens
-let items
+let itens
 
-beforeAll(async () => {
-  racas = await getRaces()
-  items = await getItens()
+beforeAll(() => {
+  racas = racasParaTestes
+  itens = itensParaTestes
   expansoes = [0, 1, 2, 3, 4, 5, 6, 7]
   personagens = [{
     nome: 'Arthas',
@@ -152,87 +156,87 @@ describe('testes criação personagem', () => {
 )
 
 describe('Testes de equipamento de itens', () => {
-  
+
   it('Resultado deve ter atributo item = 0 quando não há item de mesmo tipo já equipado', () => {
     const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
-    const itemEquipado = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos,1,items)
+    const itemEquipado = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos, 1, itens)
     const resultadoEsperado = 0;
 
     expect(itemEquipado.item).toBe(resultadoEsperado);
   }),
-  
-  it('Resultado deve ter atributo index correto quando não há item de mesmo tipo já equipado', () => {
-    const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
 
-    // verificando e equipando uma arma em personagem sem equipamento
-    const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos,1,items)
-    const personagemComUmaArma = equiparItem(personagemSemEquipamentos,1,resultado1.index);
+    it('Resultado deve ter atributo index correto quando não há item de mesmo tipo já equipado', () => {
+      const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
 
-    // verificando se personagem que só possui uma arma tem um acessorio de Vida
-    const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma,5,items)
+      // verificando e equipando uma arma em personagem sem equipamento
+      const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos, 1, itens)
+      const personagemComUmaArma = equiparItem(personagemSemEquipamentos, 1, resultado1.index);
 
-    const indexEsperado1 = 0;
-    const indexEsperado2 = 1;
+      // verificando se personagem que só possui uma arma tem um acessorio de Vida
+      const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma, 5, itens)
 
-    expect(resultado1.index).toBe(indexEsperado1);
-    expect(resultado2.index).toBe(indexEsperado2);
-  }),
+      const indexEsperado1 = 0;
+      const indexEsperado2 = 1;
 
-  it('Resultado deve ter atributo item com as informações de item já equipado de mesmo tipo', () => {
-    const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
+      expect(resultado1.index).toBe(indexEsperado1);
+      expect(resultado2.index).toBe(indexEsperado2);
+    }),
 
-    // verificando e equipando uma arma em personagem sem equipamento
-    const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos,1,items)
-    const personagemComUmaArma = equiparItem(personagemSemEquipamentos,1,resultado1.index);
+    it('Resultado deve ter atributo item com as informações de item já equipado de mesmo tipo', () => {
+      const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
 
-    // verificando se personagem que só possui uma arma tem uma arma
-    const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma,2,items)
+      // verificando e equipando uma arma em personagem sem equipamento
+      const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos, 1, itens)
+      const personagemComUmaArma = equiparItem(personagemSemEquipamentos, 1, resultado1.index);
 
-    const armaEsperada =   {
-      "id": 1,
-      "nome": "Espada curta",
-      "tipo": "DANO",
-      "preco": 40,
-      "aprimoramento": 3
-    }
-    
-    expect(resultado2.item).toEqual(armaEsperada);
-  }),
-  
-  it('Resultado deve ter atributo index com o índice do item já equipado de mesmo tipo', () => {
-    const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
+      // verificando se personagem que só possui uma arma tem uma arma
+      const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma, 2, itens)
 
-    // verificando e equipando uma arma em personagem sem equipamento
-    const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos,1,items)
-    const personagemComUmaArma = equiparItem(personagemSemEquipamentos,1,resultado1.index);
+      const armaEsperada = {
+        "id": 1,
+        "nome": "Espada curta",
+        "tipo": "DANO",
+        "preco": 40,
+        "aprimoramento": 3
+      }
 
-    // verificando se personagem que só possui uma arma tem uma arma
-    const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma,2,items)
+      expect(resultado2.item).toEqual(armaEsperada);
+    }),
 
-    const indexEsperado1 = 0;
-    const indexEsperado2 = 0;
+    it('Resultado deve ter atributo index com o índice do item já equipado de mesmo tipo', () => {
+      const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
 
-    expect(resultado1.index).toBe(indexEsperado1);
-    expect(resultado2.index).toBe(indexEsperado2);
-  }),
+      // verificando e equipando uma arma em personagem sem equipamento
+      const resultado1 = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos, 1, itens)
+      const personagemComUmaArma = equiparItem(personagemSemEquipamentos, 1, resultado1.index);
 
-  it('Deve retornar um personagem com o item corretamente adicionado', () => {
-    const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
-    const resultado = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos,1,items)
+      // verificando se personagem que só possui uma arma tem uma arma
+      const resultado2 = verificarSeHaItemMesmoTipoEquipado(personagemComUmaArma, 2, itens)
 
-    const personagemComUmaArma = equiparItem(personagemSemEquipamentos,1,resultado.index)
+      const indexEsperado1 = 0;
+      const indexEsperado2 = 0;
 
-    const personagemEsperado =       {
-      nome: 'Elfarmador',
-      raca: 'Goblin',
-      equipamentos: [ 1 ],
-      nivel: 1,
-      dinheiro: 0,
-      vida: 4,
-      vigor: 2,
-      dano: 8
-    }
+      expect(resultado1.index).toBe(indexEsperado1);
+      expect(resultado2.index).toBe(indexEsperado2);
+    }),
 
-    expect(personagemComUmaArma).toEqual(personagemEsperado)
-  })
+    it('Deve retornar um personagem com o item corretamente adicionado', () => {
+      const personagemSemEquipamentos = criarPersonagem('Elfarmador', 4, racas)
+      const resultado = verificarSeHaItemMesmoTipoEquipado(personagemSemEquipamentos, 1, itens)
+
+      const personagemComUmaArma = equiparItem(personagemSemEquipamentos, 1, resultado.index)
+
+      const personagemEsperado = {
+        nome: 'Elfarmador',
+        raca: 'Goblin',
+        equipamentos: [1],
+        nivel: 1,
+        dinheiro: 0,
+        vida: 4,
+        vigor: 2,
+        dano: 8
+      }
+
+      expect(personagemComUmaArma).toEqual(personagemEsperado)
+    })
 })

@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "raca": "Elfo Sangrento",
+    "danoBase": 4,
+    "vidaBase": 5,
+    "vigorBase": 1,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 2,
+    "raca": "Humano",
+    "vidaBase": 5,
+    "vigorBase": 4,
+    "danoBase": 5,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 3,
+    "raca": "Anão",
+    "vidaBase": 6,
+    "vigorBase": 5,
+    "danoBase": 3,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 4,
+    "raca": "Goblin",
+    "vidaBase": 4,
+    "vigorBase": 2,
+    "danoBase": 8,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 5,
+    "raca": "Orc",
+    "vidaBase": 6,
+    "vigorBase": 4,
+    "danoBase": 4,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 6,
+    "raca": "Gnomo",
+    "vidaBase": 3,
+    "vigorBase": 5,
+    "danoBase": 6,
+    "tipo": "NORMAL"
+  },
+  {
+    "id": 7,
+    "raca": "Filho da noite",
+    "danoBase": 4,
+    "vidaBase": 5,
+    "vigorBase": 1,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 23,
+    "idExpansao": 6
+  },
+  {
+    "id": 8,
+    "raca": "Elfo Caótico",
+    "danoBase": 3,
+    "vidaBase": 4,
+    "vigorBase": 1,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 18,
+    "idExpansao": 7
+  },
+  {
+    "id": 9,
+    "raca": "Anão Ferro Negro",
+    "danoBase": 7,
+    "vidaBase": 4,
+    "vigorBase": 2,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 25,
+    "idExpansao": 7
+  },
+  {
+    "id": 10,
+    "raca": "Orc Mag'har",
+    "danoBase": 7,
+    "vidaBase": 6,
+    "vigorBase": 1,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 25,
+    "idExpansao": 7
+  },
+  {
+    "id": 11,
+    "raca": "Draeneis Forjados a Luz",
+    "danoBase": 4,
+    "vidaBase": 4,
+    "vigorBase": 5,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 15,
+    "idExpansao": 6
+  },
+  {
+    "id": 12,
+    "raca": "Troll Zandalari",
+    "danoBase": 3,
+    "vidaBase": 7,
+    "vigorBase": 5,
+    "tipo": "ALIADA",
+    "lvlMinimoParaObter": 15,
+    "idExpansao": 5
+  }
+]
