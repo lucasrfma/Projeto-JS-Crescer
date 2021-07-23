@@ -2,6 +2,7 @@ import { useQuestion } from '../services/question/use-question';
 import { useLocalStorage } from '../services/local-storage/use-local-storage';
 import { getRaces,getQuests,getItens } from '../services/requests/axios';
 import { criarPersonagem } from '../personagens/personagens';
+import { verificarCheat } from './cheats'
 
 const localStorage = useLocalStorage();
 const nenhumPersonagemSelecionado = -1;
@@ -40,7 +41,7 @@ X - Sair
         switch(opcao)
         {
             case '1': 
-                await menuCriarPersonagem(personagens,expansoes,races);
+                await menuCriarPersonagem(personagens,expansoes,races,items,quests);
                 localStorage.setObject('personagens',personagens);
                 break;
                 case '2': 
@@ -76,13 +77,11 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
 {
     console.clear();
     console.log(`
-    World of E-crescer
+                World of E-crescer
     
-    Selecionar Personagem
+               Selecionar Personagem
     
-    Escolha uma opção:
-    
-    0 - Cancelar escolha de personagem
+0 - Cancelar escolha de personagem
     `);
     
     for(let i = 0; i < personagens.length; ++i)
@@ -116,7 +115,7 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
     }while(continuar);
 }
 
-async function menuPersonagem(idPersonagem,personagens,expansoes,items,quests)
+async function menuPersonagem(idPersonagem,personagens,expansoes,races,items,quests)
 {
     let opcao;
     do
@@ -125,7 +124,9 @@ async function menuPersonagem(idPersonagem,personagens,expansoes,items,quests)
         opcao = (await useQuestion(`
                 World of E-crescer
 
-                   Menu Personagem
+                 Menu Personagem
+
+  Personagem Selecionado: ${personagens[idPersonagem].nome}
 
 1 - Batalhar
 2 - Realizar Missão
@@ -137,15 +138,15 @@ X - Menu Jogador
         switch(opcao)
         {
             case '1': 
-                await menuBatalhar(idPersonagem,personagens,items);
+                await menuBatalhar(idPersonagem,personagens,expansoes,races,items,quests);
                 localStorage.setObject('personagens',personagens);
                 break;
             case '2': 
-                await menuMissao(idPersonagem,personagens,expansoes,items,quests);
+                await menuMissao(idPersonagem,personagens,expansoes,races,items,quests);
                 localStorage.setObject('personagens',personagens);
                 break;
             case '3':
-                await menuLoja(idPersonagem,personagens,expansoes,items,quests)
+                await menuLoja(idPersonagem,personagens,expansoes,races,items,quests)
                 localStorage.setObject('personagens',personagens);
                 localStorage.setObject('expansoes',expansoes);
                 break;
@@ -170,11 +171,26 @@ X - Menu Jogador
     }while(!(opcao === 'X'));
 }
 
+async function menuBatalhar(idPersonagem,personagens,expansoes,races,items,quests)
+{
+    
+}
+
+async function menuMIssao(idPersonagem,personagens,expansoes,races,items,quests)
+{
+
+}
+
+async function menuLoja(idPersonagem,personagens,expansoes,races,items,quests)
+{
+
+}
+
 /**
  * Menu que cria um personagem a partir de informações digitadas pelo usuário
  * e adiciona esse personagem ao array 'personagens' recebido como parâmetro
  */
-async function menuCriarPersonagem(personagens,expansoes,races)
+async function menuCriarPersonagem(personagens,expansoes,races,items,quests)
 {
     console.clear();
     let nome = await useQuestion(`
