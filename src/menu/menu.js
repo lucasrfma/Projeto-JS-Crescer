@@ -4,6 +4,7 @@ import { getRaces,getQuests,getItens } from '../services/requests/axios';
 import { criarPersonagem } from '../personagens/personagens';
 
 const localStorage = useLocalStorage();
+const nenhumPersonagemSelecionado = -1;
 
 async function main()
 {
@@ -39,16 +40,25 @@ X - Sair
         switch(opcao)
         {
             case '1': 
-                await criarJogador(personagens,expansoes,races);
+                await menuCriarPersonagem(personagens,expansoes,races);
                 localStorage.setObject('personagens',personagens);
                 break;
-            case '2': 
+                case '2': 
                 await selecionarPersonagem(personagens,expansoes,races,items,quests);
                 break;
-            case 'X':
-                break;
-            default:
-                console.log('Opção inválida!');
+                case 'X':
+                    break;
+                default:
+                    let cheat = verificarCheat(opcao,nenhumPersonagemSelecionado,personagens,expansoes,races,items,quests);
+                    if( cheat )
+                    {
+                        console.log(cheat);
+                        localStorage.setObject('personagens',personagens);
+                        localStorage.setObject('expansoes',expansoes);
+                    }
+                else{
+                    console.log('Opção inválida!');
+                }
         }
         if( !(opcao==='X'))
         {
@@ -58,6 +68,10 @@ X - Sair
 
 }
 
+/**
+ * Menu para que o usuário escolha um personagem
+ * Chama a função menuPersonagem.
+ */
 async function selecionarPersonagem(personagens,expansoes,races,items,quests)
 {
     console.clear();
@@ -79,7 +93,15 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
     do
     {
         let idPersonagem = parseInt(await useQuestion(''));
-        if( idPersonagem == undefined){
+
+        let cheat = verificarCheat(idPersonagem,nenhumPersonagemSelecionado,personagens,expansoes,races,items,quests);
+        if( cheat )
+        {
+            console.log(cheat);
+            localStorage.setObject('personagens',personagens);
+            localStorage.setObject('expansoes',expansoes);
+        }
+        else if( idPersonagem == undefined){
             console.log('Digite uma opção');
         }
         else if( idPersonagem == NaN || idPersonagem < 0 || idPersonagem > personagens.length)
@@ -88,14 +110,71 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
         }
         else
         {
-            await menuPersonagem();
+            await menuPersonagem(idPersonagem-1,personagens,expansoes,races,items,quests);
             continuar = false;
         }
     }while(continuar);
-    
 }
 
-async function criarJogador(personagens,expansoes,races)
+async function menuPersonagem(idPersonagem,personagens,expansoes,items,quests)
+{
+    let opcao;
+    do
+    {
+        console.clear();
+        opcao = (await useQuestion(`
+                World of E-crescer
+
+                   Menu Personagem
+
+1 - Batalhar
+2 - Realizar Missão
+3 - Loja
+
+X - Menu Jogador 
+        `)).toUpperCase();
+
+        switch(opcao)
+        {
+            case '1': 
+                await menuBatalhar(idPersonagem,personagens,items);
+                localStorage.setObject('personagens',personagens);
+                break;
+            case '2': 
+                await menuMissao(idPersonagem,personagens,expansoes,items,quests);
+                localStorage.setObject('personagens',personagens);
+                break;
+            case '3':
+                await menuLoja(idPersonagem,personagens,expansoes,items,quests)
+                localStorage.setObject('personagens',personagens);
+                localStorage.setObject('expansoes',expansoes);
+                break;
+            case 'X':
+                break;
+            default:
+                let cheat = verificarCheat(opcao,idPersonagem,personagens,expansoes,races,items,quests);
+                if( cheat )
+                {
+                    console.log(cheat);
+                    localStorage.setObject('personagens',personagens);
+                    localStorage.setObject('expansoes',expansoes);
+                }
+                else{
+                    console.log('Opção inválida!');
+                }
+        }
+        if( !(opcao==='X'))
+        {
+            await useQuestion('Aperte enter para continuar.');
+        }
+    }while(!(opcao === 'X'));
+}
+
+/**
+ * Menu que cria um personagem a partir de informações digitadas pelo usuário
+ * e adiciona esse personagem ao array 'personagens' recebido como parâmetro
+ */
+async function menuCriarPersonagem(personagens,expansoes,races)
 {
     console.clear();
     let nome = await useQuestion(`
@@ -120,6 +199,14 @@ async function criarJogador(personagens,expansoes,races)
     do
     {
         let idRaca = parseInt(await useQuestion(''));
+
+        let cheat = verificarCheat(idRaca,nenhumPersonagemSelecionado,personagens,expansoes,races,items,quests);
+        if( cheat )
+        {
+            console.log(cheat);
+            localStorage.setObject('personagens',personagens);
+            localStorage.setObject('expansoes',expansoes);
+        }
         if( idRaca == undefined){
             console.log('Digite uma opção');
         }
