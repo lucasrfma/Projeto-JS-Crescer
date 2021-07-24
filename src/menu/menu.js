@@ -7,7 +7,7 @@ import { batalhaEntrePersonagens } from '../batalha/batalha';
 import { realizarMissao, selecionarMissao } from '../missoes/missoes';
 
 const localStorage = useLocalStorage();
-const nenhumPersonagemSelecionado = -1;
+const nenhumPersonagemSelecionado = -2;
 
 async function main() {
     const races = await getRaces();
@@ -82,7 +82,7 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
  * Menu para que o usuário escolha um personagem
  * Retorna o número inserido pelo usuário
  */
-async function menuListaPersonagens(personagens,expansoes,races,items,quests,idPSelecionado = -2)
+async function menuListaPersonagens(personagens,expansoes,races,items,quests,idPSelecionado = nenhumPersonagemSelecionado)
 {
     console.clear();
     if(idPSelecionado == -2)
@@ -120,7 +120,7 @@ async function menuListaPersonagens(personagens,expansoes,races,items,quests,idP
     {
         let idPersonagem = parseInt(await useQuestion(''));
 
-        let cheat = verificarCheat(idPersonagem, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+        let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
         if (cheat) {
             console.log(cheat);
             localStorage.setObject('personagens', personagens);
@@ -244,7 +244,7 @@ async function menuMissao(idPersonagem, personagens, expansoes, races, items, qu
     do {
         let idMissao = parseInt(await useQuestion(''));
 
-        let cheat = verificarCheat(idMissao, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+        let cheat = verificarCheat(idMissao, idPersonagem, personagens, expansoes, races, items, quests);
         if (cheat) {
             console.log(cheat);
             localStorage.setObject('personagens', personagens);
