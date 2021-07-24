@@ -1,8 +1,16 @@
-export function realizarCompra(item, personagem, expansoes) {
+export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
+  const personagem = personagens.find((personagem) => {
+    return personagem.id === idPersonagem
+  })
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+  
   const personagemAtualizado = Object.assign({}, personagem)
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
-  } else if (item.tipo == 'EXPANSAO') {
+  }
+  if (item.tipo == 'EXPANSAO') {
     const expansoesAtualizado = Object.assign([], expansoes)
     expansoesAtualizado.push(item.idExpansao)
     personagemAtualizado.dinheiro -= item.preco
@@ -10,7 +18,8 @@ export function realizarCompra(item, personagem, expansoes) {
       expansoes: expansoesAtualizado,
       personagem: personagemAtualizado
     }
-  } else if (verificaSeNecessitaExpansao(item)) {
+  }
+  if (verificaSeNecessitaExpansao(item)) {
     if (verificaSePossuiExpansao(item.idExpansao, expansoes)) {
       if (verificaSePossuiRestricaoDeNivel(item)) {
         if (verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) {
@@ -62,7 +71,14 @@ export function realizarCompra(item, personagem, expansoes) {
   }
 }
 
-export function realizarVenda(personagem, item) {
+export function realizarVenda(idPersonagem, idItem, personagens, loja) {
+  const personagem = personagens.find((personagem) => {
+    return personagem.id === idPersonagem
+  })
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+
   const personagemAtualizado = Object.assign({}, personagem)
   vendeItem(personagemAtualizado.equipamentos, item)
   personagemAtualizado.dinheiro += item.preco * 0.5
