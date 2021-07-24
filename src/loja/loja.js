@@ -1,20 +1,16 @@
 export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
-  let personagem
-  let item
-  for(let i = 0; i < personagens.length; i++){
-    if(personagens[i].id === idPersonagem){
-      personagem = personagens[i]
-    }
-  }
-  for(let i = 0; i < loja.length; i++){
-    if(loja[i].id === idItem){
-      item = loja[i]
-    }
-  }
+  const personagem = personagens.find((personagem) => {
+    return personagem.id === idPersonagem
+  })
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+  
   const personagemAtualizado = Object.assign({}, personagem)
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
-  } else if (item.tipo == 'EXPANSAO') {
+  }
+  if (item.tipo == 'EXPANSAO') {
     const expansoesAtualizado = Object.assign([], expansoes)
     expansoesAtualizado.push(item.idExpansao)
     personagemAtualizado.dinheiro -= item.preco
@@ -22,7 +18,8 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
       expansoes: expansoesAtualizado,
       personagem: personagemAtualizado
     }
-  } else if (verificaSeNecessitaExpansao(item)) {
+  }
+  if (verificaSeNecessitaExpansao(item)) {
     if (verificaSePossuiExpansao(item.idExpansao, expansoes)) {
       if (verificaSePossuiRestricaoDeNivel(item)) {
         if (verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) {
@@ -75,18 +72,13 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
 }
 
 export function realizarVenda(idPersonagem, idItem, personagens, loja) {
-  let personagem
-  let item
-  for(let i = 0; i < personagens.length; i++){
-    if(personagens[i].id === idPersonagem){
-      personagem = personagens[i]
-    }
-  }
-  for(let i = 0; i < loja.length; i++){
-    if(loja[i].id === idItem){
-      item = loja[i]
-    }
-  }
+  const personagem = personagens.find((personagem) => {
+    return personagem.id === idPersonagem
+  })
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+
   const personagemAtualizado = Object.assign({}, personagem)
   vendeItem(personagemAtualizado.equipamentos, item)
   personagemAtualizado.dinheiro += item.preco * 0.5

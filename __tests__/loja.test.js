@@ -6,15 +6,14 @@ let CLONELOJA = []
 
 let loja
 let expansoes
-beforeAll(async () => {
+beforeAll(() => {
   loja = itensParaTestes
 })
 
 beforeEach(() => {
-  CLONELOJA.length = loja.length
-  for (let i = 0; i < loja.length; i++) {
-    CLONELOJA.splice(i, 1, (Object.assign({}, loja[i])))
-  }
+  CLONELOJA = loja.map((item) => {
+    return Object.assign({}, item)
+  })
 })
 
 describe('Testando compra de itens na loja', () => {
