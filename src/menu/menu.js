@@ -3,6 +3,7 @@ import { useLocalStorage } from '../services/local-storage/use-local-storage';
 import { getRaces,getQuests,getItens } from '../services/requests/axios';
 import { criarPersonagem } from '../personagens/personagens';
 import { verificarCheat } from './cheats'
+import { batalhaEntrePersonagens } from '../batalha/batalha';
 
 const localStorage = useLocalStorage();
 const nenhumPersonagemSelecionado = -1;
@@ -75,20 +76,51 @@ X - Sair
  */
 async function selecionarPersonagem(personagens,expansoes,races,items,quests)
 {
+    const idPersonagem = await menuListaPersonagens(personagens,expansoes,races,items,quests);
+    if(idPersonagem > 0)
+    {
+        await menuPersonagem(--idPersonagem,personagens,expansoes,races,items,quests);
+    }
+}
+
+/**
+ * Menu para que o usuário escolha um personagem
+ * Retorna o número inserido pelo usuário
+ */
+async function menuListaPersonagens(personagens,expansoes,races,items,quests,idPSelecionado = -1)
+{
     console.clear();
-    console.log(`
+    if(idPSelecionado == -1)
+    {
+        console.log(`
                 World of E-crescer
     
-               Selecionar Personagem
+              Selecionar Personagem
     
 0 - Cancelar escolha de personagem
-    `);
-    
-    for(let i = 0; i < personagens.length; ++i)
-    {
-        console.log( (i + 1) + ' - ' + personagens[i].nome);
+        `);
+        for(let i = 0; i < personagens.length; ++i)
+        {
+            console.log( (i + 1) + ' - ' + personagens[i].nome + ' ' + personagens[i].raca + ' lvl ' + personagens[i].nivel);
+        }
     }
-    let continuar = true;
+    else
+    {
+        console.log(`
+                World of E-crescer
+    
+         Selecionar Personagem a Combater
+    
+0 - Cancelar escolha de personagem
+        `);
+        for(let i = 0; i < personagens.length; ++i)
+        {
+            if( i != idPSelecionado)
+            {
+                console.log( (i + 1) + ' - ' + personagens[i].nome + ' ' + personagens[i].raca + ' lvl ' + personagens[i].nivel);
+            }
+        }
+    }
     do
     {
         let idPersonagem = parseInt(await useQuestion(''));
@@ -103,16 +135,15 @@ async function selecionarPersonagem(personagens,expansoes,races,items,quests)
         else if( idPersonagem == undefined){
             console.log('Digite uma opção');
         }
-        else if( idPersonagem == NaN || idPersonagem < 0 || idPersonagem > personagens.length)
+        else if( idPersonagem == NaN || idPersonagem < 0 || idPersonagem > personagens.length || idPersonagem == idPSelecionado )
         {
             console.log('Opção inválida!');
         }
         else
         {
-            await menuPersonagem(idPersonagem-1,personagens,expansoes,races,items,quests);
-            continuar = false;
+            return idPersonagem;
         }
-    }while(continuar);
+    }while(true);
 }
 
 async function menuPersonagem(idPersonagem,personagens,expansoes,races,items,quests)
@@ -173,10 +204,16 @@ X - Menu Jogador
 
 async function menuBatalhar(idPersonagem,personagens,expansoes,races,items,quests)
 {
-    
+    const idPersonagemInimigo = await menuListaPersonagens(personagens,expansoes,races,items,quests,idPersonagem);
+    if(idPersonagemInimigo > 0)
+    {
+        const vencedor = batalhaEntrePersonagens(personagens[idPersonagem],personagens[--idPersonagemInimigo],items);
+
+    }
+
 }
 
-async function menuMIssao(idPersonagem,personagens,expansoes,races,items,quests)
+async function menuMissao(idPersonagem,personagens,expansoes,races,items,quests)
 {
 
 }
