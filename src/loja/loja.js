@@ -1,4 +1,16 @@
-export function realizarCompra(item, personagem, expansoes) {
+export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
+  let personagem
+  let item
+  for(let i = 0; i < personagens.length; i++){
+    if(personagens[i].id === idPersonagem){
+      personagem = personagens[i]
+    }
+  }
+  for(let i = 0; i < loja.length; i++){
+    if(loja[i].id === idItem){
+      item = loja[i]
+    }
+  }
   const personagemAtualizado = Object.assign({}, personagem)
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
@@ -62,7 +74,19 @@ export function realizarCompra(item, personagem, expansoes) {
   }
 }
 
-export function realizarVenda(personagem, item) {
+export function realizarVenda(idPersonagem, idItem, personagens, loja) {
+  let personagem
+  let item
+  for(let i = 0; i < personagens.length; i++){
+    if(personagens[i].id === idPersonagem){
+      personagem = personagens[i]
+    }
+  }
+  for(let i = 0; i < loja.length; i++){
+    if(loja[i].id === idItem){
+      item = loja[i]
+    }
+  }
   const personagemAtualizado = Object.assign({}, personagem)
   vendeItem(personagemAtualizado.equipamentos, item)
   personagemAtualizado.dinheiro += item.preco * 0.5
