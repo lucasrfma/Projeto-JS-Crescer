@@ -26,8 +26,7 @@ export async function realizarMissao(personagem, missao) {
     const mensagem = missao.descricao.replace(antiga, primeira)
     console.log(mensagem)
     
-    await waitForCompletion(missao.tempoEstimado);
-    // await new Promise(resolve => setTimeout(resolve, missao.tempoEstimado));
+    await new Promise(resolve => setTimeout(resolve, missao.tempoEstimado));
     
     const personagemAtualizado = receberRecompensasMissao(personagem, missao)
 
@@ -41,14 +40,6 @@ export async function realizarMissao(personagem, missao) {
 
     return personagemAtualizado
 }
-
-async function waitForCompletion(ms)
-{
-    return new Promise(resolve => {
-        setTimeout(resolve, ms)
-    })
-}
-
 
 export function receberRecompensasMissao(personagem, missao) {
     let clonePersonagem = Object.assign({}, personagem)
