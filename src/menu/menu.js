@@ -17,14 +17,14 @@ async function main() {
     if (localStorage.getObject('personagens') == null) {
         localStorage.setObject('personagens', []);
     }
-    let personagens = localStorage.getObject('personagens');
     if (localStorage.getObject('expansoes') == null) {
         localStorage.setObject('expansoes', []);
     }
-    const expansoes = localStorage.getObject('expansoes');
-
+    
     let opcao;
     do {
+        let personagens = localStorage.getObject('personagens');
+        let expansoes = localStorage.getObject('expansoes');
         console.clear();
         opcao = (await useQuestion(`
                 World of E-crescer
@@ -179,7 +179,7 @@ X - Menu Jogador
             case '3':
                 await menuLoja(idPersonagem, personagens, expansoes, races, items, quests);
                 localStorage.setObject('personagens', personagens);
-                localStorage.setObject('expansoes', expansoes);
+                expansoes = localStorage.getObject('expansoes');
                 break;
             case '4':
                 console.log(personagens[idPersonagem]);
@@ -375,7 +375,6 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
         // if (cheat) {
         //     console.log(cheat);
         //     localStorage.setObject('personagens', personagens);
-        //     localStorage.setObject('expansoes', expansoes);
         // }
         // else 
         opcao = parseInt(opcao)
@@ -431,16 +430,18 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
         // if (cheat) {
         //     console.log(cheat);
         //     localStorage.setObject('personagens', personagens);
-        //     localStorage.setObject('expansoes', expansoes);
         // }
         // else 
         opcao = parseInt(opcao)
         if(opcao === 0){
             return
         }
-        else if(opcao > personagens[idPersonagem].equipamentos.length){
+        else if( opcao !== opcao || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length )
+        {
             console.log('Opção inválida!');
-        }else{
+        }
+        else
+        {
             const personagemAtualizado = realizarVenda(idPersonagem, 
                 personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens)
             personagens[idPersonagem] = personagemAtualizado
