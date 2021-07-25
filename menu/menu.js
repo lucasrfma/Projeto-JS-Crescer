@@ -129,7 +129,7 @@ async function menuListaPersonagens(personagens,expansoes,races,items,quests,idP
             if( idPersonagem == undefined || idPersonagem == null){
                 console.log('Digite uma opção');
             }
-            else if( idPersonagem !== idPersonagem || idPersonagem < 0 || idPersonagem > personagens.length || (idPersonagem-1) == idPSelecionado )
+            else if( Number.isNaN(idPersonagem) || idPersonagem < 0 || idPersonagem > personagens.length || (idPersonagem-1) == idPSelecionado )
             {
                 console.log('Opção inválida!');
             }
@@ -248,7 +248,7 @@ async function menuMissao(idPersonagem, personagens, expansoes, races, items, qu
             if (idMissao == undefined) {
                 console.log('Digite uma opção');
             }
-            else if (idMissao !== idMissao || idMissao < 0 || idMissao > quests.length) {
+            else if ( Number.isNaN(idMissao) || idMissao < 0 || idMissao > quests.length) {
                 console.log('Opção inválida!');
             }
             else {
@@ -364,7 +364,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
             if(opcao === 0){
                 return
             }
-            else if( opcao !== opcao || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length ){
+            else if( Number.isNaN(opcao) || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length ){
                 console.log('Opção inválida!');
             }else{
                 try{
@@ -416,7 +416,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
             if(opcao === 0){
                 return
             }
-            else if( opcao !== opcao || opcao < 0 || opcao > personagens[idPersonagem].equipamentos.length )
+            else if( Number.isNaN(opcao) || opcao < 0 || opcao > personagens[idPersonagem].equipamentos.length )
             {
                 console.log('Opção inválida!');
             }
@@ -506,7 +506,7 @@ async function menuCriarPersonagem(personagens, expansoes, races, items, quests)
             if (idRaca == undefined) {
                 console.log('Digite uma opção');
             }
-            else if (idRaca == NaN || idRaca < 0 || idRaca > races.length) {
+            else if ( Number.isNaN(idRaca) || idRaca < 0 || idRaca > races.length) {
                 console.log('Opção inválida!');
             }
             else {
