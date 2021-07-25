@@ -287,7 +287,7 @@ async function menuLoja(idPersonagem, personagens, expansoes, races, itens, ques
         console.log(`
                 World of E-crescer
     
-            Loja
+                       Loja
 
 Personagem Selecionado: ${personagens[idPersonagem].nome} 
 Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}

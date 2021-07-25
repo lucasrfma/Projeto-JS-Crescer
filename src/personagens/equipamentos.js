@@ -7,20 +7,7 @@
  */
 export function verificarSeHaItemMesmoTipoEquipadoByID(personagem,idNovoItem,items)
 {
-    const tipoNovoItem = _getItemByID(idNovoItem,items).tipo;
-    const resultado = { index: 0 };
-    for( let i = 0; i < personagem.equipamentos.length; ++i)
-    {
-        if(personagem.equipamentos[i].tipo === tipoNovoItem)
-        {
-            resultado.index = i;
-            resultado.item = personagem.equipamentos[i];
-            return  resultado;
-        }
-        resultado.index = i+1;
-    }
-    resultado.item = 0;
-    return resultado;
+    return verificarSeHaItemMesmoTipoEquipado(personagem,_getItemByID(idNovoItem,items));
 }
 
 /**
@@ -50,10 +37,7 @@ export function verificarSeHaItemMesmoTipoEquipado(personagem,novoItem)
 
 export function equiparItemByID(personagem, idItem, index, items)
 {
-    const novoPersonagem = {...personagem};
-    novoPersonagem.equipamentos = [...personagem.equipamentos];
-    novoPersonagem.equipamentos[index] = _getItemByID(idItem,items);
-    return novoPersonagem;
+    return equiparItem(personagem,_getItemByID(idItem,items),index);
 }
 
 export function equiparItem(personagem,item,index)
