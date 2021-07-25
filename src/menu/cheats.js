@@ -1,6 +1,6 @@
 import { uparPersonagem } from '../personagens/personagens'
 import { verificaSePossuiItemDoAtributo, substituiItemMesmoTipo, procuraItemPorTipo } from '../loja/loja'
-import { nenhumPersonagemSelecionado } from './menu'
+import { nenhumPersonagemSelecionado } from '../../menu/menu'
 import { useLocalStorage } from '../services/local-storage/use-local-storage';
 
 const cheats = ['anduinnunes', 'willidan', 'julichking', 'gusthrall', 'fabyoggsaron', 'kevinerzul', 'pablothar', 'vitorexxar', 'zorzarthas', 'diandraka', 'sergiorgrim', 'geffbeijos']

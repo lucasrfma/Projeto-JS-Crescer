@@ -1,7 +1,7 @@
 import { equiparItem, verificarSeHaItemMesmoTipoEquipado } from "../personagens/equipamentos"
-import { menuConfirmarCompra } from '../menu/menu'
+import { menuConfirmarCompra } from '../../menu/menu'
 
-function verificaProblemasNaCompra(personagem,item,expansoes)
+export function verificaProblemasNaCompra(personagem,item,expansoes)
 {
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
@@ -25,42 +25,42 @@ function verificaProblemasNaCompra(personagem,item,expansoes)
   }
 }
 
-export async function realizarCompraComConfirmacao(idItem, idPersonagem, personagens, loja, expansoes) {
-  const personagem = personagens[idPersonagem]
-  const item = loja.find((item) => {
-    return item.id === idItem
-  })
+// export async function realizarCompraComConfirmacao(idItem, idPersonagem, personagens, loja, expansoes) {
+//   const personagem = personagens[idPersonagem]
+//   const item = loja.find((item) => {
+//     return item.id === idItem
+//   })
 
-  const personagemAtualizado = Object.assign({}, personagem)
-  if (item.tipo == 'EXPANSAO') {
-    const expansoesAtualizado = Object.assign([], expansoes)
-    if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
-      throw new Error('Personagem não possui dinheiro suficiente')
-    }
-    expansoesAtualizado.push(item.idExpansao)
-    personagemAtualizado.dinheiro -= item.preco
-    return {
-      expansoes: expansoesAtualizado,
-      personagem: personagemAtualizado
-    }
-  }
+//   const personagemAtualizado = Object.assign({}, personagem)
+//   if (item.tipo == 'EXPANSAO') {
+//     const expansoesAtualizado = Object.assign([], expansoes)
+//     if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
+//       throw new Error('Personagem não possui dinheiro suficiente')
+//     }
+//     expansoesAtualizado.push(item.idExpansao)
+//     personagemAtualizado.dinheiro -= item.preco
+//     return {
+//       expansoes: expansoesAtualizado,
+//       personagem: personagemAtualizado
+//     }
+//   }
 
-  verificaProblemasNaCompra(personagem,item,expansoes);
+//   verificaProblemasNaCompra(personagem,item,expansoes);
 
-  const infoItemMesmoTipoAnterior = verificarSeHaItemMesmoTipoEquipado(personagem,item);
-  if( infoItemMesmoTipoAnterior.item )
-  {
-    if( !(await menuConfirmarCompra(item, infoItemMesmoTipoAnterior,idPersonagem,personagens)) )
-    {
-      throw new Error('Compra cancelada!');
-    }
-  }
+//   const infoItemMesmoTipoAnterior = verificarSeHaItemMesmoTipoEquipado(personagem,item);
+//   if( infoItemMesmoTipoAnterior.item )
+//   {
+//     if( !(await menuConfirmarCompra(item, infoItemMesmoTipoAnterior,idPersonagem,personagens)) )
+//     {
+//       throw new Error('Compra cancelada!');
+//     }
+//   }
   
-  const personagemComNovoItem = comprarItem( personagem, item, infoItemMesmoTipoAnterior.index);
-  return {
-    personagem: personagemComNovoItem
-  };
-}
+//   const personagemComNovoItem = comprarItem( personagem, item, infoItemMesmoTipoAnterior.index);
+//   return {
+//     personagem: personagemComNovoItem
+//   };
+// }
 
 export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
   const personagem = personagens[idPersonagem]
@@ -91,7 +91,7 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
   };
 }
 
-function comprarItem(personagem,item,index)
+export function comprarItem(personagem,item,index)
 {
   const novoPersonagem = equiparItem(personagem,item,index);
   novoPersonagem.dinheiro -= item.preco;
