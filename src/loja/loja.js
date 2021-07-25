@@ -1,13 +1,37 @@
-export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
+import { equiparItem, verificarSeHaItemMesmoTipoEquipado } from "../personagens/equipamentos"
+import { menuConfirmarCompra } from '../menu/menu'
+
+function verificaProblemasNaCompra(personagem,item,expansoes)
+{
+  if (verificaSeJaPossui(personagem.equipamentos, item)) {
+    throw new Error('O personagem já possui este item')
+  }
+  
+  if( verificaSeNecessitaExpansao(item) && 
+      !verificaSePossuiExpansao(item.idExpansao, expansoes) ) 
+  {
+    throw new Error('Personagem não possui expansão necessária');
+  }
+  
+  if( verificaSePossuiRestricaoDeNivel(item) && 
+      !verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) 
+  {
+    throw new Error('Personagem não possui nível suficiente para este item');
+  }
+  
+  if( !verificaSePossuiDinheiro(personagem.dinheiro, item.preco) )
+  {
+    throw new Error('Personagem não possui dinheiro suficiente');
+  }
+}
+
+export async function realizarCompraComConfirmacao(idItem, idPersonagem, personagens, loja, expansoes) {
   const personagem = personagens[idPersonagem]
   const item = loja.find((item) => {
     return item.id === idItem
   })
 
   const personagemAtualizado = Object.assign({}, personagem)
-  if (verificaSeJaPossui(personagem.equipamentos, item)) {
-    throw new Error('O personagem já possui este item')
-  }
   if (item.tipo == 'EXPANSAO') {
     const expansoesAtualizado = Object.assign([], expansoes)
     if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
@@ -21,31 +45,57 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
     }
   }
 
-  if( verificaSeNecessitaExpansao(item) && !verificaSePossuiExpansao(item.idExpansao, expansoes) ) 
+  verificaProblemasNaCompra(personagem,item,expansoes);
+
+  const infoItemMesmoTipoAnterior = verificarSeHaItemMesmoTipoEquipado(personagem,item);
+  if( infoItemMesmoTipoAnterior.item )
   {
-    throw new Error('Personagem não possui expansão necessária');
-  }
-  if( verificaSePossuiRestricaoDeNivel(item) && !verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) 
-  {
-    throw new Error('Personagem não possui nível suficiente para este item');
-  }
-  if( !verificaSePossuiDinheiro(personagem.dinheiro, item.preco) )
-  {
-    throw new Error('Personagem não possui dinheiro suficiente');
-  }
-  if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
-    personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
-    personagemAtualizado.dinheiro -= item.preco
-    return {
-      personagem: personagemAtualizado
-    }
-  } else {
-    personagemAtualizado.equipamentos.push(item)
-    personagemAtualizado.dinheiro -= item.preco
-    return {
-      personagem: personagemAtualizado
+    if( !(await menuConfirmarCompra(item, infoItemMesmoTipoAnterior)) )
+    {
+      throw new Error('Compra cancelada!');
     }
   }
+  
+  const personagemComNovoItem = comprarItem( personagem, item, infoItemMesmoTipoAnterior.index);
+  return {
+    personagem: personagemComNovoItem
+  };
+}
+
+export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
+  const personagem = personagens[idPersonagem]
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+
+  const personagemAtualizado = Object.assign({}, personagem)
+  if (item.tipo == 'EXPANSAO') {
+    const expansoesAtualizado = Object.assign([], expansoes)
+    if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
+      throw new Error('Personagem não possui dinheiro suficiente')
+    }
+    expansoesAtualizado.push(item.idExpansao)
+    personagemAtualizado.dinheiro -= item.preco
+    return {
+      expansoes: expansoesAtualizado,
+      personagem: personagemAtualizado
+    }
+  }
+  
+  verificaProblemasNaCompra(personagem,item,expansoes);
+
+  const infoItemMesmoTipoAnterior = verificarSeHaItemMesmoTipoEquipado(personagem,item);
+  const personagemComNovoItem = comprarItem( personagem, item, infoItemMesmoTipoAnterior.index);
+  return {
+    personagem: personagemComNovoItem
+  };
+}
+
+function comprarItem(personagem,item,index)
+{
+  const novoPersonagem = equiparItem(personagem,item,index);
+  novoPersonagem.dinheiro -= item.preco;
+  return novoPersonagem;
 }
 
 export function realizarVenda(idPersonagem, idItem, personagens, loja) {

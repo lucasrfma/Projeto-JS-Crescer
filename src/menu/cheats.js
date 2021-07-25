@@ -81,7 +81,7 @@ export function gusthrall(personagem) {
 export function anduinnunes(personagens) {
     const personagensAtualizados = [...personagens]
     personagensAtualizados.forEach(personagem => {
-        personagem.dinheiro += 20000
+        personagem.dinheiro += 2000000
     });
     return personagensAtualizados
 }

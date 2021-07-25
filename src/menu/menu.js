@@ -5,7 +5,7 @@ import { criarPersonagem, uparPersonagem } from '../personagens/personagens';
 import { utilizarCheat, verificaCheatGlobal, verificarCheat } from './cheats'
 import { batalhaEntrePersonagens } from '../batalha/batalha';
 import { realizarMissao, selecionarMissao } from '../missoes/missoes';
-import { realizarCompra, realizarVenda } from '../loja/loja';
+import { realizarCompra, realizarCompraComConfirmacao, realizarVenda } from '../loja/loja';
 
 const localStorage = useLocalStorage();
 const nenhumPersonagemSelecionado = -2;
@@ -177,7 +177,7 @@ X - Menu Jogador
                 localStorage.setObject('personagens', personagens);
                 break;
             case '3':
-                await menuLoja(idPersonagem, personagens, expansoes, races, items, quests)
+                await menuLoja(idPersonagem, personagens, expansoes, races, items, quests);
                 localStorage.setObject('personagens', personagens);
                 localStorage.setObject('expansoes', expansoes);
                 break;
@@ -386,7 +386,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
             console.log('Opção inválida!');
         }else{
             try{
-                const compraRealizada = realizarCompra(itensSemExpansoesJaAdquiridas[opcao - 1].id, 
+                const compraRealizada = await realizarCompraComConfirmacao(itensSemExpansoesJaAdquiridas[opcao - 1].id, 
                     idPersonagem, personagens, itens, expansoes)
                 if(compraRealizada.expansoes){
                     localStorage.setObject('expansoes', compraRealizada.expansoes)
@@ -394,7 +394,6 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
                 }
                 personagens[idPersonagem] = compraRealizada.personagem
                 localStorage.setObject('personagens', personagens)
-                personagens = localStorage.getObject('personagens')
                 console.log('Compra realizada com sucesso! Aperte enter para continuar')
                 await useQuestion('')
             }catch (error){
@@ -449,7 +448,41 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
     }while(true);
 }
 
-async function menu() {}
+export async function menuConfirmarCompra(item,infoItemMesmoTipoAnterior) 
+{
+    let opcao;
+    do
+    {
+        console.clear();
+        opcao = (await useQuestion(`
+                World of E-crescer
+                       
+                      AVISO
+
+    Ao comprar o item:
+
+    ${item.nome}
+    ${item.tipo}
+    ${item.aprimoramento}
+    
+    Você perderá o item:
+    
+    ${infoItemMesmoTipoAnterior.item.nome}
+    ${infoItemMesmoTipoAnterior.item.tipo}
+    ${infoItemMesmoTipoAnterior.item.aprimoramento}
+
+    Confirma a compra? (s/n)
+        `)).toUpperCase();
+        console.log(opcao);
+        switch (opcao) {
+            case 'N':
+                return false;
+            case 'S':
+                return true;
+        }
+    }while(true);
+    
+}
 /**
  * Menu que cria um personagem a partir de informações digitadas pelo usuário
  * e adiciona esse personagem ao array 'personagens' recebido como parâmetro
