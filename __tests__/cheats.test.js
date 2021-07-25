@@ -1,16 +1,3 @@
-import {
-  willidan,
-  gusthrall,
-  anduinnunes,
-  julichking,
-  kevinerzul,
-  fabyoggsaron,
-  pablothar,
-  vitorexxar,
-  zorzarthas,
-  diandraka,
-  sergiorgrim
-} from '../src/menu/cheats'
 import { tratarCheats}  from '../src/menu/cheats'
 import { useLocalStorage } from '../src/services/local-storage/use-local-storage'
 
