@@ -50,7 +50,7 @@ export async function realizarCompraComConfirmacao(idItem, idPersonagem, persona
   const infoItemMesmoTipoAnterior = verificarSeHaItemMesmoTipoEquipado(personagem,item);
   if( infoItemMesmoTipoAnterior.item )
   {
-    if( !(await menuConfirmarCompra(item, infoItemMesmoTipoAnterior)) )
+    if( !(await menuConfirmarCompra(item, infoItemMesmoTipoAnterior,idPersonagem,personagens)) )
     {
       throw new Error('Compra cancelada!');
     }
