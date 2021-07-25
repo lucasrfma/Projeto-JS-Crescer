@@ -7,7 +7,7 @@ export function selecionarMissao(missoes, idMissao, expansoes) {
             missao = missoes[i]
         }
     }
-    if (missao.hasOwnProperty('idExpansao')) {
+    if ( missao != null && missao != undefined && missao.hasOwnProperty('idExpansao')) {
         if (expansoes.includes(missao.idExpansao)) {
             return missao
         } else {
