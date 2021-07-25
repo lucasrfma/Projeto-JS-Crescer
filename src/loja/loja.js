@@ -159,7 +159,9 @@ export function procuraItemPorTipo(equipamentos, tipo) {
 }
 
 export function vendeItem(equipamentos, item) {
-  const posicaoItem = equipamentos.indexOf(item)
+  const posicaoItem = equipamentos.map((equipamento) => {
+    return equipamento.id
+  }).indexOf(item.id)
   equipamentos.splice(posicaoItem, 1)
 }
 
