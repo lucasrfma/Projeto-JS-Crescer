@@ -6,13 +6,13 @@ import { useLocalStorage } from '../services/local-storage/use-local-storage';
 const cheats = ['anduinnunes', 'willidan', 'julichking', 'gusthrall', 'fabyoggsaron', 'kevinerzul', 'pablothar', 'vitorexxar', 'zorzarthas', 'diandraka', 'sergiorgrim', 'geffbeijos']
 const globalCheats = ['anduinnunes', 'julichking', 'geffbeijos']
 
-export function tratarCheats(input, idPersonagem, personagens)
+export function tratarCheats(input, idPersonagem, personagens, registro = 'personagens')
 {
     if(verificarCheat(input))
     {
         if( verificaCheatGlobal(input) || idPersonagem != nenhumPersonagemSelecionado )
         {
-            utilizarCheat(input,idPersonagem,personagens);
+            utilizarCheat(input,idPersonagem,personagens,registro);
             console.log('\nCheat ' + input + ' Ativado');
             return true;
         }
@@ -21,18 +21,18 @@ export function tratarCheats(input, idPersonagem, personagens)
     return false;
 }
 
-export function utilizarCheat(input,idPersonagem,personagens)
+export function utilizarCheat(input,idPersonagem,personagens, registro = 'personagens')
 {
     const localStorage = useLocalStorage();
     if( verificaCheatGlobal(input) )
     {
         let personagensAtualizados = utilizarCheatPersonagens(input,personagens);
-        localStorage.setObject('personagens',personagensAtualizados);
+        localStorage.setObject(registro,personagensAtualizados);
     }
     else
     {
         personagens[idPersonagem] = utilizarCheatPersonagem(input, personagens[idPersonagem]);
-        localStorage.setObject('personagens',personagens);
+        localStorage.setObject(registro,personagens);
     }
 }
 
