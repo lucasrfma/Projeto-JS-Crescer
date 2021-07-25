@@ -172,7 +172,6 @@ X - Menu Jogador
                 break;
             case '3':
                 await menuLoja(idPersonagem, personagens, expansoes, races, items, quests);
-                localStorage.setObject('personagens', personagens);
                 expansoes = localStorage.getObject('expansoes');
                 break;
             case '4':
