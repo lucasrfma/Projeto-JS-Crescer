@@ -20,67 +20,31 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
       personagem: personagemAtualizado
     }
   }
-  if (verificaSeNecessitaExpansao(item)) {
-    if (verificaSePossuiExpansao(item.idExpansao, expansoes)) {
-      if (verificaSePossuiRestricaoDeNivel(item)) {
-        if (verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) {
-          if (verificaSePossuiDinheiro(personagem.dinheiro, item.preco)) {
-            if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
-              personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
-              personagemAtualizado.dinheiro -= item.preco
-              return {
-                personagem: personagemAtualizado
-              }
-            } else {
-              personagemAtualizado.equipamentos.push(item)
-              personagemAtualizado.dinheiro -= item.preco
-              return {
-                personagem: personagemAtualizado
-              }
-            }
-          } else {
-            throw new Error('Personagem não possui dinheiro suficiente')
-          }
-        } else {
-          throw new Error('Personagem não possui nível suficiente para este item')
-        }
-      }
-      if (verificaSePossuiDinheiro(personagem.dinheiro, item.preco)) {
-        if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
-          personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
-          personagemAtualizado.dinheiro -= item.preco
-          return {
-            personagem: personagemAtualizado
-          }
-        } else {
-          personagemAtualizado.equipamentos.push(item)
-          personagemAtualizado.dinheiro -= item.preco
-          return {
-            personagem: personagemAtualizado
-          }
-        }
-      } else {
-        throw new Error('Personagem não possui dinheiro suficiente')
-      }
-    } else {
-      throw new Error('Personagem não possui expansão necessária')
-    }
-  } else if (verificaSePossuiDinheiro(personagem.dinheiro, item.preco)) {
-    if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
-      personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
-      personagemAtualizado.dinheiro -= item.preco
-      return {
-        personagem: personagemAtualizado
-      }
-    } else {
-      personagemAtualizado.equipamentos.push(item)
-      personagemAtualizado.dinheiro -= item.preco
-      return {
-        personagem: personagemAtualizado
-      }
+
+  if( verificaSeNecessitaExpansao(item) && !verificaSePossuiExpansao(item.idExpansao, expansoes) ) 
+  {
+    throw new Error('Personagem não possui expansão necessária');
+  }
+  if( verificaSePossuiRestricaoDeNivel(item) && !verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) 
+  {
+    throw new Error('Personagem não possui nível suficiente para este item');
+  }
+  if( !verificaSePossuiDinheiro(personagem.dinheiro, item.preco) )
+  {
+    throw new Error('Personagem não possui dinheiro suficiente');
+  }
+  if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
+    personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
+    personagemAtualizado.dinheiro -= item.preco
+    return {
+      personagem: personagemAtualizado
     }
   } else {
-    throw new Error('Personagem não possui dinheiro suficiente')
+    personagemAtualizado.equipamentos.push(item)
+    personagemAtualizado.dinheiro -= item.preco
+    return {
+      personagem: personagemAtualizado
+    }
   }
 }
 
