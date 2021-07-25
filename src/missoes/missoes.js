@@ -34,11 +34,25 @@ export async function realizarMissao(personagem, missao) {
             reticencias += '.';
         }
         console.clear();
-        console.log(mensagem+reticencias+'\n'+i+' / '+countdown);
+        console.log(`
+            World of E-crescer
+
+        ${mensagem}${reticencias}
+            
+        ${i} / ${countdown}
+            
+            `);
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
     console.clear();
-    console.log(mensagem+"..."+'\n'+countdown+' / '+countdown);
+    console.log(`
+            World of E-crescer
+        
+        ${mensagem}...
+    
+        ${countdown} / ${countdown}
+    
+    `);
     
     const personagemAtualizado = receberRecompensasMissao(personagem, missao)
 
