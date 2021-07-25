@@ -423,7 +423,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
                 item.aprimoramento + ' preco: ' + item.preco)
             })
         }
-        console.log('Digite uma opção: ');
+        console.log('\nDigite uma opção: ');
         let opcao = await useQuestion('')
 
         // let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
@@ -436,15 +436,15 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
         if(opcao === 0){
             return
         }
-        else if( opcao !== opcao || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length )
+        else if( opcao !== opcao || opcao < 0 || opcao > personagens[idPersonagem].equipamentos.length )
         {
             console.log('Opção inválida!');
         }
         else
         {
             const personagemAtualizado = realizarVenda(idPersonagem, 
-                personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens)
-            personagens[idPersonagem] = personagemAtualizado
+                personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens);
+            personagens[idPersonagem] = personagemAtualizado;
             localStorage.setObject('personagens', personagens);
         }
     }while(true);
