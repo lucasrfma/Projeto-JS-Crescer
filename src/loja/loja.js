@@ -118,7 +118,7 @@ export function verificaSePossuiExpansao(itemExpansao, expansoes) {
 }
 
 export function verificaSePossuiItemDoAtributo(personagem, tipoItem) {
-  const itemProcurado = personagem.equipamentos.find(equipamento => equipamento.tipo == tipoItem)
+  const itemProcurado = personagem.equipamentos.find(equipamento => equipamento.tipo === tipoItem)
   if (itemProcurado != undefined) {
     return true
   }

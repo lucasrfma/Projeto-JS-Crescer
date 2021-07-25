@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 import {
   willidan,
   gusthrall,
@@ -12,7 +10,7 @@ import {
   zorzarthas,
   diandraka,
   sergiorgrim
-} from '../src/cheats/cheats'
+} from '../src/menu/cheats'
 
 describe('Testando cada cheat', () => {
   it('Deve conseguir aplicar o cheat WILLIDAN e subir +20 níveis do personagem selecionado', () => {
