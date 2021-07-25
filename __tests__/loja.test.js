@@ -27,7 +27,7 @@ describe('Testando compra de itens na loja', () => {
       equipamentos: []
     }
     const personagemAtualizado = realizarCompra(CLONELOJA[8].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[8])))
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[8])))
   })
 
   it('Deve conseguir comprar um item do tipo DANO com sucesso', () => {
@@ -40,7 +40,7 @@ describe('Testando compra de itens na loja', () => {
       equipamentos: [CLONELOJA[8]]
     }
     const personagemAtualizado = realizarCompra(CLONELOJA[1].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[1])))
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[1])))
   })
 
   it('Deve conseguir comprar um item do tipo VIDA com sucesso', () => {
@@ -52,7 +52,7 @@ describe('Testando compra de itens na loja', () => {
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
     const personagemAtualizado = realizarCompra(CLONELOJA[4].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[4])))
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[4])))
   })
 
   it('Deve conseguir comprar um item do tipo EXPANSAO com sucesso', () => {
@@ -97,7 +97,7 @@ describe('Testando compra de itens na loja', () => {
 
     const personagemAtualizado = realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
 
-    expect(personagemAtualizado).toEqual(personagemEsperado)
+    expect(personagemAtualizado.personagem).toEqual(personagemEsperado)
   })
 
   it('Deve conseguir vender um item e receber metade do preço de volta', () => {
@@ -123,8 +123,8 @@ describe('Testando compra de itens na loja', () => {
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
     const personagemAtualizado = realizarCompra(CLONELOJA[1].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
-    expect(personagemAtualizado.equipamentos).toContain(CLONELOJA[1])
-    expect(personagemAtualizado.equipamentos).not.toContain(CLONELOJA[0])
+    expect(personagemAtualizado.personagem.equipamentos).toContain(CLONELOJA[1])
+    expect(personagemAtualizado.personagem.equipamentos).not.toContain(CLONELOJA[0])
   })
 
   it('Deve validar o nível do personagem para permitir a venda de itens com um nível mínimo necessário', () => {
@@ -137,7 +137,7 @@ describe('Testando compra de itens na loja', () => {
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
     const personagemAtualizado = realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
-    expect(personagemAtualizado.equipamentos).toContain(CLONELOJA[12])
+    expect(personagemAtualizado.personagem.equipamentos).toContain(CLONELOJA[12])
   })
 
   it('Deve lançar execeção quando personagem tentar comprar item que já possui', () => {
