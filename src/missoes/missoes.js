@@ -24,10 +24,21 @@ export async function realizarMissao(personagem, missao) {
     primeira = primeira.substr(0, primeira.length - 1)
     primeira += 'ndo'
     const mensagem = missao.descricao.replace(antiga, primeira)
-    console.log(mensagem)
     
-    await waitForCompletion(missao.tempoEstimado);
-    // await new Promise(resolve => setTimeout(resolve, missao.tempoEstimado));
+    let countdown = missao.tempoEstimado/1000;
+    for( let i = 0; i < countdown ; ++i )
+    {
+        let reticencias = '.';
+        for( let j = 0; j < i % 3; ++j)
+        {
+            reticencias += '.';
+        }
+        console.clear();
+        console.log(mensagem+reticencias+'\n'+i+' / '+countdown);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    console.clear();
+    console.log(mensagem+"..."+'\n'+countdown+' / '+countdown);
     
     const personagemAtualizado = receberRecompensasMissao(personagem, missao)
 
@@ -41,14 +52,6 @@ export async function realizarMissao(personagem, missao) {
 
     return personagemAtualizado
 }
-
-async function waitForCompletion(ms)
-{
-    return new Promise(resolve => {
-        setTimeout(resolve, ms)
-    })
-}
-
 
 export function receberRecompensasMissao(personagem, missao) {
     let clonePersonagem = Object.assign({}, personagem)

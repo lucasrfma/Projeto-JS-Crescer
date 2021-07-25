@@ -6,40 +6,41 @@ let CLONELOJA = []
 
 let loja
 let expansoes
-beforeAll(async () => {
+beforeAll(() => {
   loja = itensParaTestes
 })
 
 beforeEach(() => {
-  CLONELOJA.length = loja.length
-  for (let i = 0; i < loja.length; i++) {
-    CLONELOJA.splice(i, 1, (Object.assign({}, loja[i])))
-  }
+  CLONELOJA = loja.map((item) => {
+    return Object.assign({}, item)
+  })
 })
 
 describe('Testando compra de itens na loja', () => {
   it('Deve conseguir comprar um item do tipo VIGOR com sucesso', () => {
     expansoes = [0, 1, 2, 3]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 1,
       dinheiro: 100000,
       equipamentos: []
     }
-    const personagemAtualizado = realizarCompra(CLONELOJA[8], personagem, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[8])))
+    const personagemAtualizado = realizarCompra(CLONELOJA[8].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[8])))
   })
 
   it('Deve conseguir comprar um item do tipo DANO com sucesso', () => {
     expansoes = [0, 1, 2, 3]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 1,
       dinheiro: 100000,
       equipamentos: [CLONELOJA[8]]
     }
-    const personagemAtualizado = realizarCompra(CLONELOJA[1], personagem, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[1])))
+    const personagemAtualizado = realizarCompra(CLONELOJA[1].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[1])))
   })
 
   it('Deve conseguir comprar um item do tipo VIDA com sucesso', () => {
@@ -50,14 +51,15 @@ describe('Testando compra de itens na loja', () => {
       dinheiro: 100000,
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
-    const personagemAtualizado = realizarCompra(CLONELOJA[4], personagem, expansoes)
-    expect(personagemAtualizado.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[4])))
+    const personagemAtualizado = realizarCompra(CLONELOJA[4].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
+    expect(personagemAtualizado.personagem.equipamentos).toEqual(expect.arrayContaining(new Array(CLONELOJA[4])))
   })
 
   it('Deve conseguir comprar um item do tipo EXPANSAO com sucesso', () => {
     const expansoesEPersonagemEsperados = {
       expansoes: [1],
       personagem: {
+        id:1,
         nome: 'Jaina',
         nivel: 1,
         dinheiro: 300000,
@@ -66,17 +68,19 @@ describe('Testando compra de itens na loja', () => {
     }
     expansoes = []
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 1,
       dinheiro: 500000,
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
-    const expansoesEPersonagemAtualizados = realizarCompra(CLONELOJA[13], personagem, expansoes)
+    const expansoesEPersonagemAtualizados = realizarCompra(CLONELOJA[13].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
     expect(expansoesEPersonagemAtualizados).toEqual(expansoesEPersonagemEsperados)
   })
 
   it('Deve conseguir comprar um equipamento de alguma expansão apenas se já tiver obtido a expansão', () => {
     const personagemEsperado = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 300,
@@ -84,57 +88,62 @@ describe('Testando compra de itens na loja', () => {
     }
     expansoes = [1]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 500,
       equipamentos: []
     }
 
-    const personagemAtualizado = realizarCompra(CLONELOJA[12], personagem, expansoes)
+    const personagemAtualizado = realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
 
-    expect(personagemAtualizado).toEqual(personagemEsperado)
+    expect(personagemAtualizado.personagem).toEqual(personagemEsperado)
   })
 
   it('Deve conseguir vender um item e receber metade do preço de volta', () => {
     expansoes = [2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 500000,
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
-    const personagemAtualizado = realizarVenda(personagem, CLONELOJA[0], expansoes)
+    const personagemAtualizado = realizarVenda(personagem.id, CLONELOJA[0].id, new Array(personagem), CLONELOJA)
     expect(personagemAtualizado.equipamentos).not.toContain(CLONELOJA[0])
   })
 
   it('Deve subtituir um item equipado se o item recém comprado for do mesmo tipo que o que já está sendo usado', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 500000,
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
-    const personagemAtualizado = realizarCompra(CLONELOJA[1], personagem, expansoes)
-    expect(personagemAtualizado.equipamentos).toContain(CLONELOJA[1])
-    expect(personagemAtualizado.equipamentos).not.toContain(CLONELOJA[0])
+    const personagemAtualizado = realizarCompra(CLONELOJA[1].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
+    expect(personagemAtualizado.personagem.equipamentos).toContain(CLONELOJA[1])
+    expect(personagemAtualizado.personagem.equipamentos).not.toContain(CLONELOJA[0])
   })
 
   it('Deve validar o nível do personagem para permitir a venda de itens com um nível mínimo necessário', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 500000,
       equipamentos: [CLONELOJA[8], CLONELOJA[0]]
     }
-    const personagemAtualizado = realizarCompra(CLONELOJA[12], personagem, expansoes)
-    expect(personagemAtualizado.equipamentos).toContain(CLONELOJA[12])
+    const personagemAtualizado = realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
+    expect(personagemAtualizado.personagem.equipamentos).toContain(CLONELOJA[12])
   })
 
   it('Deve lançar execeção quando personagem tentar comprar item que já possui', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 500000,
@@ -142,13 +151,14 @@ describe('Testando compra de itens na loja', () => {
     }
 
     expect(() => {
-      realizarCompra(CLONELOJA[8], personagem, expansoes)
+      realizarCompra(CLONELOJA[8].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
     }).toThrow('O personagem já possui este item')
   })
 
   it('Deve lançar execeção quando personagem tentar comprar item que não possui dinheiro suficiente', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 20,
       dinheiro: 1,
@@ -156,13 +166,14 @@ describe('Testando compra de itens na loja', () => {
     }
 
     expect(() => {
-      realizarCompra(CLONELOJA[8], personagem, expansoes)
+      realizarCompra(CLONELOJA[8].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
     }).toThrow('Personagem não possui dinheiro suficiente')
   })
 
   it('Deve lançar execeção quando personagem tentar comprar item que não possui nivel suficiente para usá-lo', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 1,
       dinheiro: 50000,
@@ -170,13 +181,14 @@ describe('Testando compra de itens na loja', () => {
     }
 
     expect(() => {
-      realizarCompra(CLONELOJA[12], personagem, expansoes)
+      realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
     }).toThrow('Personagem não possui nível suficiente para este item')
   })
 
   it('Deve lançar execeção quando personagem tentar comprar item que não possui nivel suficiente para usá-lo', () => {
     expansoes = [1, 2]
     const personagem = {
+      id: 1,
       nome: 'Jaina',
       nivel: 1,
       dinheiro: 50000,
@@ -184,7 +196,7 @@ describe('Testando compra de itens na loja', () => {
     }
 
     expect(() => {
-      realizarCompra(CLONELOJA[12], personagem, expansoes)
+      realizarCompra(CLONELOJA[12].id, personagem.id, new Array(personagem), CLONELOJA, expansoes)
     }).toThrow('Personagem não possui nível suficiente para este item')
   })
 })

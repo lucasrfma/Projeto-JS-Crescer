@@ -1,16 +1,26 @@
-export function realizarCompra(item, personagem, expansoes) {
+export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
+  const personagem = personagens[idPersonagem]
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+
   const personagemAtualizado = Object.assign({}, personagem)
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
-  } else if (item.tipo == 'EXPANSAO') {
+  }
+  if (item.tipo == 'EXPANSAO') {
     const expansoesAtualizado = Object.assign([], expansoes)
+    if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
+      throw new Error('Personagem não possui dinheiro suficiente')
+    }
     expansoesAtualizado.push(item.idExpansao)
     personagemAtualizado.dinheiro -= item.preco
     return {
       expansoes: expansoesAtualizado,
       personagem: personagemAtualizado
     }
-  } else if (verificaSeNecessitaExpansao(item)) {
+  }
+  if (verificaSeNecessitaExpansao(item)) {
     if (verificaSePossuiExpansao(item.idExpansao, expansoes)) {
       if (verificaSePossuiRestricaoDeNivel(item)) {
         if (verificaSePossuiNivelNecessario(personagem.nivel, item.lvlMinimo)) {
@@ -18,11 +28,15 @@ export function realizarCompra(item, personagem, expansoes) {
             if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
               personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
               personagemAtualizado.dinheiro -= item.preco
-              return personagemAtualizado
+              return {
+                personagem: personagemAtualizado
+              }
             } else {
               personagemAtualizado.equipamentos.push(item)
               personagemAtualizado.dinheiro -= item.preco
-              return personagemAtualizado
+              return {
+                personagem: personagemAtualizado
+              }
             }
           } else {
             throw new Error('Personagem não possui dinheiro suficiente')
@@ -35,11 +49,15 @@ export function realizarCompra(item, personagem, expansoes) {
         if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
           personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
           personagemAtualizado.dinheiro -= item.preco
-          return personagemAtualizado
+          return {
+            personagem: personagemAtualizado
+          }
         } else {
           personagemAtualizado.equipamentos.push(item)
           personagemAtualizado.dinheiro -= item.preco
-          return personagemAtualizado
+          return {
+            personagem: personagemAtualizado
+          }
         }
       } else {
         throw new Error('Personagem não possui dinheiro suficiente')
@@ -51,18 +69,27 @@ export function realizarCompra(item, personagem, expansoes) {
     if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
       personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
       personagemAtualizado.dinheiro -= item.preco
-      return personagemAtualizado
+      return {
+        personagem: personagemAtualizado
+      }
     } else {
       personagemAtualizado.equipamentos.push(item)
       personagemAtualizado.dinheiro -= item.preco
-      return personagemAtualizado
+      return {
+        personagem: personagemAtualizado
+      }
     }
   } else {
     throw new Error('Personagem não possui dinheiro suficiente')
   }
 }
 
-export function realizarVenda(personagem, item) {
+export function realizarVenda(idPersonagem, idItem, personagens, loja) {
+  const personagem = personagens[idPersonagem]
+  const item = loja.find((item) => {
+    return item.id === idItem
+  })
+
   const personagemAtualizado = Object.assign({}, personagem)
   vendeItem(personagemAtualizado.equipamentos, item)
   personagemAtualizado.dinheiro += item.preco * 0.5
