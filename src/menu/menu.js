@@ -5,6 +5,7 @@ import { criarPersonagem, uparPersonagem } from '../personagens/personagens';
 import { verificarCheat } from './cheats'
 import { batalhaEntrePersonagens } from '../batalha/batalha';
 import { realizarMissao, selecionarMissao } from '../missoes/missoes';
+import { realizarCompra, realizarVenda } from '../loja/loja';
 
 const localStorage = useLocalStorage();
 const nenhumPersonagemSelecionado = -2;
@@ -274,10 +275,175 @@ async function menuMissao(idPersonagem, personagens, expansoes, races, items, qu
     } while (continuar);
 }
 
-async function menuLoja(idPersonagem, personagens, expansoes, races, items, quests) {
+async function menuLoja(idPersonagem, personagens, expansoes, races, itens, quests) {
+    do{
+        console.clear();
+        console.log(`
+                World of E-crescer
+    
+            Loja
 
+Personagem Selecionado: ${personagens[idPersonagem].nome} 
+Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
+1 - Comprar item
+2 - Vender item
+
+0 - Sair da Loja
+    `);
+        let opcao = await useQuestion('');
+
+        // let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
+        // if (cheat) {
+        //     console.log(cheat);
+        //     localStorage.setObject('personagens', personagens);
+        //     localStorage.setObject('expansoes', expansoes);
+        // }
+        // else 
+        opcao = parseInt(opcao)
+        switch(opcao){
+            case 1:
+                await menuComprarItem(personagens,expansoes,races,itens,quests,idPersonagem)
+                break
+            case 2:
+                await menuVenderItem(personagens,races,itens,quests,idPersonagem)
+                break
+            case 0:
+                return
+            default:
+                console.log('Opção inválida!')
+        }
+    }while(true);
 }
 
+async function menuComprarItem(personagens,expansoes,races,itens,quests,idPersonagem)
+{
+    do{
+        console.clear();
+        console.log(`
+            Selecionar item para comprar
+
+Personagem Selecionado: ${personagens[idPersonagem].nome}
+Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
+0 - Voltar para a loja
+    `)
+        const itensSemItensJaEquipados = itens.filter((item) => {
+            if(item.tipo === 'EXPANSAO') return true
+            const itemEquipadoIgual = personagens[idPersonagem].equipamentos.reduce((acc, equipamento) => {
+                if (acc) return true
+                if (equipamento.id === item.id) return true
+                return false
+            }, false)
+            if(itemEquipadoIgual === false) return true
+            return false
+        })
+        const itensSemExpansoesJaAdquiridas = itensSemItensJaEquipados.filter((item) => {
+            return (item.tipo !== 'EXPANSAO' || (item.tipo === 'EXPANSAO' && !expansoes.includes(item.idExpansao)))
+        })
+        itensSemExpansoesJaAdquiridas.forEach((item, index) => {
+            if(item.tipo === 'EXPANSAO'){
+                console.log((index + 1) + '-' + item.nome + ': EXPANSAO numero da expansao: ' + 
+                item.idExpansao + ' preco: ' + item.preco)
+            }else{
+                if(item.lvlMinimo && item.idExpansao){
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: ' + item.preco + ' lvl minimo necessario: ' + 
+                    item.lvlMinimo + ' expansao necessaria: ' + item.idExpansao)
+                }else if(item.lvlMinimo){
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: ' + item.preco + ' lvl minimo necessario: ' + 
+                    item.lvlMinimo)
+                }else if(item.idExpansao){
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: ' + item.preco + ' expansao necessaria: ' + item.idExpansao)
+                }
+                else{
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: ' + item.preco)
+                }
+            }
+        })
+        console.log('Digite uma opção: ');
+        let opcao = await useQuestion('')
+
+        // let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
+        // if (cheat) {
+        //     console.log(cheat);
+        //     localStorage.setObject('personagens', personagens);
+        //     localStorage.setObject('expansoes', expansoes);
+        // }
+        // else 
+        opcao = parseInt(opcao)
+        if(opcao === 0){
+            return
+        }
+        else if(opcao > itensSemExpansoesJaAdquiridas.length){
+            console.log('Opção inválida!');
+        }else{
+            try{
+                const compraRealizada = realizarCompra(itensSemExpansoesJaAdquiridas[opcao - 1].id, 
+                    idPersonagem, personagens, itens, expansoes)
+                if(compraRealizada.expansoes){
+                    localStorage.setObject('expansoes', compraRealizada.expansoes)
+                    expansoes = localStorage.getObject('expansoes')
+                }
+                personagens[idPersonagem] = compraRealizada.personagem
+                localStorage.setObject('personagens', personagens)
+                personagens = localStorage.getObject('personagens')
+                console.log('Compra realizada com sucesso! Aperte enter para continuar')
+                await useQuestion('')
+            }catch (error){
+                console.log(error.message + '\nAperte enter para continuar')
+                await useQuestion('')
+            }
+        }
+    }while(true);
+}
+
+async function menuVenderItem(personagens,races,itens,quests,idPersonagem)
+{
+    do{
+        console.clear();
+        console.log(`
+            Selecionar item para vender
+
+Personagem Selecionado: ${personagens[idPersonagem].nome}
+Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
+0 - Voltar para a loja
+    `);
+        if(personagens[idPersonagem].equipamentos.length === 0) {
+            console.log('Nenhum item equipado nesse personagem.')
+        }else{
+            personagens[idPersonagem].equipamentos.forEach((item, index) => {
+                console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                item.aprimoramento + ' preco: ' + item.preco)
+            })
+        }
+        console.log('Digite uma opção: ');
+        let opcao = await useQuestion('')
+
+        // let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
+        // if (cheat) {
+        //     console.log(cheat);
+        //     localStorage.setObject('personagens', personagens);
+        //     localStorage.setObject('expansoes', expansoes);
+        // }
+        // else 
+        opcao = parseInt(opcao)
+        if(opcao === 0){
+            return
+        }
+        else if(opcao > personagens[idPersonagem].equipamentos.length){
+            console.log('Opção inválida!');
+        }else{
+            const personagemAtualizado = realizarVenda(idPersonagem, 
+                personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens)
+            personagens[idPersonagem] = personagemAtualizado
+            localStorage.setObject('personagens', personagens);
+        }
+    }while(true);
+}
+
+async function menu() {}
 /**
  * Menu que cria um personagem a partir de informações digitadas pelo usuário
  * e adiciona esse personagem ao array 'personagens' recebido como parâmetro

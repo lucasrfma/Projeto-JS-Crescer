@@ -1,17 +1,18 @@
 export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoes) {
-  const personagem = personagens.find((personagem) => {
-    return personagem.id === idPersonagem
-  })
+  const personagem = personagens[idPersonagem]
   const item = loja.find((item) => {
     return item.id === idItem
   })
-  
+
   const personagemAtualizado = Object.assign({}, personagem)
   if (verificaSeJaPossui(personagem.equipamentos, item)) {
     throw new Error('O personagem já possui este item')
   }
   if (item.tipo == 'EXPANSAO') {
     const expansoesAtualizado = Object.assign([], expansoes)
+    if(!verificaSePossuiDinheiro(personagem.dinheiro, item.preco)){
+      throw new Error('Personagem não possui dinheiro suficiente')
+    }
     expansoesAtualizado.push(item.idExpansao)
     personagemAtualizado.dinheiro -= item.preco
     return {
@@ -27,11 +28,15 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
             if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
               personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
               personagemAtualizado.dinheiro -= item.preco
-              return personagemAtualizado
+              return {
+                personagem: personagemAtualizado
+              }
             } else {
               personagemAtualizado.equipamentos.push(item)
               personagemAtualizado.dinheiro -= item.preco
-              return personagemAtualizado
+              return {
+                personagem: personagemAtualizado
+              }
             }
           } else {
             throw new Error('Personagem não possui dinheiro suficiente')
@@ -44,11 +49,15 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
         if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
           personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
           personagemAtualizado.dinheiro -= item.preco
-          return personagemAtualizado
+          return {
+            personagem: personagemAtualizado
+          }
         } else {
           personagemAtualizado.equipamentos.push(item)
           personagemAtualizado.dinheiro -= item.preco
-          return personagemAtualizado
+          return {
+            personagem: personagemAtualizado
+          }
         }
       } else {
         throw new Error('Personagem não possui dinheiro suficiente')
@@ -60,11 +69,15 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
     if (verificaSePossuiItemDoAtributo(personagem, item.tipo)) {
       personagemAtualizado.equipamentos = substituiItemMesmoTipo(personagemAtualizado.equipamentos, procuraItemPorTipo(personagem.equipamentos, item.tipo), item)
       personagemAtualizado.dinheiro -= item.preco
-      return personagemAtualizado
+      return {
+        personagem: personagemAtualizado
+      }
     } else {
       personagemAtualizado.equipamentos.push(item)
       personagemAtualizado.dinheiro -= item.preco
-      return personagemAtualizado
+      return {
+        personagem: personagemAtualizado
+      }
     }
   } else {
     throw new Error('Personagem não possui dinheiro suficiente')
@@ -72,9 +85,7 @@ export function realizarCompra(idItem, idPersonagem, personagens, loja, expansoe
 }
 
 export function realizarVenda(idPersonagem, idItem, personagens, loja) {
-  const personagem = personagens.find((personagem) => {
-    return personagem.id === idPersonagem
-  })
+  const personagem = personagens[idPersonagem]
   const item = loja.find((item) => {
     return item.id === idItem
   })
