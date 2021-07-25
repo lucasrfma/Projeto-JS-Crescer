@@ -382,7 +382,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
         if(opcao === 0){
             return
         }
-        else if(opcao > itensSemExpansoesJaAdquiridas.length){
+        else if( opcao !== opcao || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length ){
             console.log('Opção inválida!');
         }else{
             try{
@@ -391,6 +391,7 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
                 if(compraRealizada.expansoes){
                     localStorage.setObject('expansoes', compraRealizada.expansoes)
                     expansoes = localStorage.getObject('expansoes')
+                    console.log(expansoes);
                 }
                 personagens[idPersonagem] = compraRealizada.personagem
                 localStorage.setObject('personagens', personagens)
