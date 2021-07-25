@@ -1,11 +1,12 @@
-import { useQuestion } from '../services/question/use-question';
-import { useLocalStorage } from '../services/local-storage/use-local-storage';
-import { getRaces,getQuests,getItens } from '../services/requests/axios';
-import { criarPersonagem, uparPersonagem } from '../personagens/personagens';
-import { tratarCheats } from './cheats'
-import { batalhaEntrePersonagens } from '../batalha/batalha';
-import { realizarMissao, selecionarMissao } from '../missoes/missoes';
-import { realizarCompraComConfirmacao, realizarVenda } from '../loja/loja';
+import { useQuestion } from '../src/services/question/use-question';
+import { useLocalStorage } from '../src/services/local-storage/use-local-storage';
+import { getRaces,getQuests,getItens } from '../src/services/requests/axios';
+import { criarPersonagem, uparPersonagem } from '../src/personagens/personagens';
+import { tratarCheats } from '../src/menu/cheats'
+import { batalhaEntrePersonagens } from '../src/batalha/batalha';
+import { realizarMissao, selecionarMissao } from '../src/missoes/missoes';
+import { realizarVenda } from '../src/loja/loja';
+import { realizarCompraComConfirmacao } from './loja-com-confirmacao';
 
 const localStorage = useLocalStorage();
 export const nenhumPersonagemSelecionado = -2;
