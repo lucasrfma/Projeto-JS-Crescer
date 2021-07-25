@@ -44,22 +44,6 @@ export function verificaCheatGlobal(input){
     return globalCheats.includes(input.toLowerCase());
 }
 
-// export function utilizarCheat(input, idPersonagem, personagens) {
-//     let resultado
-//     let personagem
-//     for (let i = 0; i < personagens.length; i++) {
-//         if (i === idPersonagem) {
-//             personagem = { ...personagens[i] }
-//         }
-//     }
-//     if (input.toLowerCase() !== 'anduinnunes' && input.toLowerCase() !== 'julichking') {
-//         resultado = utilizarCheatPersonagem(input, personagem)
-//     } else {
-//         resultado = utilizarCheatPersonagens(input, personagens)
-//     }
-//     return resultado
-// }
-
 export function utilizarCheatPersonagens(input, personagens) {
     let personagensAtualizados
     if (input.toLowerCase() === 'anduinnunes') {
