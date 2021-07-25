@@ -5,7 +5,7 @@ import { criarPersonagem, uparPersonagem } from '../personagens/personagens';
 import { utilizarCheat, verificaCheatGlobal, verificarCheat } from './cheats'
 import { batalhaEntrePersonagens } from '../batalha/batalha';
 import { realizarMissao, selecionarMissao } from '../missoes/missoes';
-import { realizarCompra, realizarVenda } from '../loja/loja';
+import { realizarCompra, realizarCompraComConfirmacao, realizarVenda } from '../loja/loja';
 
 const localStorage = useLocalStorage();
 const nenhumPersonagemSelecionado = -2;
@@ -17,14 +17,14 @@ async function main() {
     if (localStorage.getObject('personagens') == null) {
         localStorage.setObject('personagens', []);
     }
-    let personagens = localStorage.getObject('personagens');
     if (localStorage.getObject('expansoes') == null) {
         localStorage.setObject('expansoes', []);
     }
-    const expansoes = localStorage.getObject('expansoes');
-
+    
     let opcao;
     do {
+        let personagens = localStorage.getObject('personagens');
+        let expansoes = localStorage.getObject('expansoes');
         console.clear();
         opcao = (await useQuestion(`
                 World of E-crescer
@@ -177,9 +177,9 @@ X - Menu Jogador
                 localStorage.setObject('personagens', personagens);
                 break;
             case '3':
-                await menuLoja(idPersonagem, personagens, expansoes, races, items, quests)
+                await menuLoja(idPersonagem, personagens, expansoes, races, items, quests);
                 localStorage.setObject('personagens', personagens);
-                localStorage.setObject('expansoes', expansoes);
+                expansoes = localStorage.getObject('expansoes');
                 break;
             case '4':
                 console.log(personagens[idPersonagem]);
@@ -287,7 +287,7 @@ async function menuLoja(idPersonagem, personagens, expansoes, races, itens, ques
         console.log(`
                 World of E-crescer
     
-            Loja
+                       Loja
 
 Personagem Selecionado: ${personagens[idPersonagem].nome} 
 Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
@@ -375,26 +375,25 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
         // if (cheat) {
         //     console.log(cheat);
         //     localStorage.setObject('personagens', personagens);
-        //     localStorage.setObject('expansoes', expansoes);
         // }
         // else 
         opcao = parseInt(opcao)
         if(opcao === 0){
             return
         }
-        else if(opcao > itensSemExpansoesJaAdquiridas.length){
+        else if( opcao !== opcao || opcao < 0 || opcao > itensSemExpansoesJaAdquiridas.length ){
             console.log('Opção inválida!');
         }else{
             try{
-                const compraRealizada = realizarCompra(itensSemExpansoesJaAdquiridas[opcao - 1].id, 
+                const compraRealizada = await realizarCompraComConfirmacao(itensSemExpansoesJaAdquiridas[opcao - 1].id, 
                     idPersonagem, personagens, itens, expansoes)
                 if(compraRealizada.expansoes){
                     localStorage.setObject('expansoes', compraRealizada.expansoes)
                     expansoes = localStorage.getObject('expansoes')
+                    console.log(expansoes);
                 }
                 personagens[idPersonagem] = compraRealizada.personagem
                 localStorage.setObject('personagens', personagens)
-                personagens = localStorage.getObject('personagens')
                 console.log('Compra realizada com sucesso! Aperte enter para continuar')
                 await useQuestion('')
             }catch (error){
@@ -424,32 +423,68 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
                 item.aprimoramento + ' preco: ' + item.preco)
             })
         }
-        console.log('Digite uma opção: ');
+        console.log('\nDigite uma opção: ');
         let opcao = await useQuestion('')
 
         // let cheat = verificarCheat(idPersonagem, idPSelecionado, personagens, expansoes, races, items, quests);
         // if (cheat) {
         //     console.log(cheat);
         //     localStorage.setObject('personagens', personagens);
-        //     localStorage.setObject('expansoes', expansoes);
         // }
         // else 
         opcao = parseInt(opcao)
         if(opcao === 0){
             return
         }
-        else if(opcao > personagens[idPersonagem].equipamentos.length){
+        else if( opcao !== opcao || opcao < 0 || opcao > personagens[idPersonagem].equipamentos.length )
+        {
             console.log('Opção inválida!');
-        }else{
+        }
+        else
+        {
             const personagemAtualizado = realizarVenda(idPersonagem, 
-                personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens)
-            personagens[idPersonagem] = personagemAtualizado
+                personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens);
+            personagens[idPersonagem] = personagemAtualizado;
             localStorage.setObject('personagens', personagens);
         }
     }while(true);
 }
 
-async function menu() {}
+export async function menuConfirmarCompra(item,infoItemMesmoTipoAnterior) 
+{
+    let opcao;
+    do
+    {
+        console.clear();
+        opcao = (await useQuestion(`
+                World of E-crescer
+                       
+                      AVISO
+
+    Ao comprar o item:
+
+    ${item.nome}
+    ${item.tipo}
+    ${item.aprimoramento}
+    
+    Você perderá o item:
+    
+    ${infoItemMesmoTipoAnterior.item.nome}
+    ${infoItemMesmoTipoAnterior.item.tipo}
+    ${infoItemMesmoTipoAnterior.item.aprimoramento}
+
+    Confirma a compra? (s/n)
+        `)).toUpperCase();
+        console.log(opcao);
+        switch (opcao) {
+            case 'N':
+                return false;
+            case 'S':
+                return true;
+        }
+    }while(true);
+    
+}
 /**
  * Menu que cria um personagem a partir de informações digitadas pelo usuário
  * e adiciona esse personagem ao array 'personagens' recebido como parâmetro
