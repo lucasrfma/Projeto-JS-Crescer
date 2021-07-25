@@ -1,36 +1,47 @@
 import { uparPersonagem } from '../personagens/personagens'
 import { verificaSePossuiItemDoAtributo, substituiItemMesmoTipo, procuraItemPorTipo } from '../loja/loja'
+import { nenhumPersonagemSelecionado } from './menu'
+import { useLocalStorage } from '../services/local-storage/use-local-storage';
 
-const cheats = ['anduinnunes', 'willidan', 'julichking', 'gusthrall', 'fabyoggsaron', 'kevinerzul', 'pablothar', 'vitorexxar', 'zorzarthas', 'diandraka', 'sergiorgrim']
+const cheats = ['anduinnunes', 'willidan', 'julichking', 'gusthrall', 'fabyoggsaron', 'kevinerzul', 'pablothar', 'vitorexxar', 'zorzarthas', 'diandraka', 'sergiorgrim', 'geffbeijos']
+const globalCheats = ['anduinnunes', 'julichking', 'geffbeijos']
+
+export function tratarCheats(input, idPersonagem, personagens)
+{
+    if(verificarCheat(input))
+    {
+        if( verificaCheatGlobal(input) || idPersonagem != nenhumPersonagemSelecionado )
+        {
+            utilizarCheat(input,idPersonagem,personagens);
+            console.log('\nCheat ' + input + ' Ativado');
+            return true;
+        }
+        console.log('Não é possível utilizar este comando aqui');
+    }
+    return false;
+}
+
+export function utilizarCheat(input,idPersonagem,personagens)
+{
+    const localStorage = useLocalStorage();
+    if( verificaCheatGlobal(input) )
+    {
+        let personagensAtualizados = utilizarCheatPersonagens(input,personagens);
+        localStorage.setObject('personagens',personagensAtualizados);
+    }
+    else
+    {
+        personagens[idPersonagem] = utilizarCheatPersonagem(input, personagens[idPersonagem]);
+        localStorage.setObject('personagens',personagens);
+    }
+}
 
 export function verificarCheat(input) {
-    if (cheats.includes(input.toLowerCase())) {
-        return true
-    }
-    return false
+    return cheats.includes(input.toLowerCase());
 }
 
 export function verificaCheatGlobal(input){
-    if (input.toLowerCase() !== 'anduinnunes' && input.toLowerCase() !== 'julichking') {
-        return false
-    }
-    return true
-}
-
-export function utilizarCheat(input, idPersonagem, personagens) {
-    let resultado
-    let personagem
-    for (let i = 0; i < personagens.length; i++) {
-        if (i === idPersonagem) {
-            personagem = { ...personagens[i] }
-        }
-    }
-    if (input.toLowerCase() !== 'anduinnunes' && input.toLowerCase() !== 'julichking') {
-        resultado = utilizarCheatPersonagem(input, personagem)
-    } else {
-        resultado = utilizarCheatPersonagens(input, personagens)
-    }
-    return resultado
+    return globalCheats.includes(input.toLowerCase());
 }
 
 export function utilizarCheatPersonagens(input, personagens) {
@@ -39,6 +50,8 @@ export function utilizarCheatPersonagens(input, personagens) {
         personagensAtualizados = anduinnunes(personagens)
     } else if (input.toLowerCase() === 'julichking') {
         personagensAtualizados = julichking(personagens)
+    } else if (input.toLowerCase() === 'geffbeijos') {
+        personagensAtualizados = geffbeijos(personagens)
     }
     return personagensAtualizados
 }
@@ -79,6 +92,14 @@ export function gusthrall(personagem) {
 }
 
 export function anduinnunes(personagens) {
+    const personagensAtualizados = [...personagens]
+    personagensAtualizados.forEach(personagem => {
+        personagem.dinheiro += 20000
+    });
+    return personagensAtualizados
+}
+
+export function geffbeijos(personagens) {
     const personagensAtualizados = [...personagens]
     personagensAtualizados.forEach(personagem => {
         personagem.dinheiro += 2000000
