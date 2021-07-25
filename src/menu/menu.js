@@ -2,7 +2,7 @@ import { useQuestion } from '../services/question/use-question';
 import { useLocalStorage } from '../services/local-storage/use-local-storage';
 import { getRaces,getQuests,getItens } from '../services/requests/axios';
 import { criarPersonagem, uparPersonagem } from '../personagens/personagens';
-import { verificarCheat } from './cheats'
+import { utilizarCheat, verificaCheatGlobal, verificarCheat } from './cheats'
 import { batalhaEntrePersonagens } from '../batalha/batalha';
 import { realizarMissao, selecionarMissao } from '../missoes/missoes';
 
@@ -16,7 +16,7 @@ async function main() {
     if (localStorage.getObject('personagens') == null) {
         localStorage.setObject('personagens', []);
     }
-    const personagens = localStorage.getObject('personagens');
+    let personagens = localStorage.getObject('personagens');
     if (localStorage.getObject('expansoes') == null) {
         localStorage.setObject('expansoes', []);
     }
@@ -47,11 +47,14 @@ X - Sair
             case 'X':
                 break;
             default:
-                let cheat = verificarCheat(opcao, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+                let cheat = verificarCheat(opcao);
                 if (cheat) {
-                    console.log(cheat);
+                    if(verificaCheatGlobal(opcao)){
+                        personagens = utilizarCheat(opcao, nenhumPersonagemSelecionado, personagens)
+                    }else{
+                        console.log('Não é possível utilizar este comando aqui')
+                    }
                     localStorage.setObject('personagens', personagens);
-                    localStorage.setObject('expansoes', expansoes);
                 }
                 else {
                     console.log('Opção inválida!');
@@ -118,15 +121,19 @@ async function menuListaPersonagens(personagens,expansoes,races,items,quests,idP
     }
     do
     {
-        let idPersonagem = parseInt(await useQuestion(''));
-
-        let cheat = verificarCheat(idPersonagem, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+        let idPersonagem = await useQuestion('');
+        
+        let cheat = verificarCheat(idPersonagem);
         if (cheat) {
-            console.log(cheat);
+            if(verificaCheatGlobal(idPersonagem)){
+                personagens = utilizarCheat(idPersonagem, nenhumPersonagemSelecionado, personagens)
+            }else{
+                console.log('Não é possível utilizar este comando aqui')
+            }
             localStorage.setObject('personagens', personagens);
-            localStorage.setObject('expansoes', expansoes);
-        }
-        else if( idPersonagem == undefined || idPersonagem == null){
+        }else{
+            idPersonagem = parseInt(idPersonagem);
+        } if( idPersonagem == undefined || idPersonagem == null){
             console.log('Digite uma opção');
         }
         else if( idPersonagem !== idPersonagem || idPersonagem < 0 || idPersonagem > personagens.length || (idPersonagem-1) == idPSelecionado )
@@ -179,11 +186,10 @@ X - Menu Jogador
             case 'X':
                 break;
             default:
-                let cheat = verificarCheat(opcao, idPersonagem, personagens, expansoes, races, items, quests);
+                let cheat = verificarCheat(opcao);
                 if (cheat) {
-                    console.log(cheat);
+                    personagens[idPersonagem] = utilizarCheat(opcao, idPersonagem, personagens)
                     localStorage.setObject('personagens', personagens);
-                    localStorage.setObject('expansoes', expansoes);
                 }
                 else {
                     console.log('Opção inválida!');
@@ -242,15 +248,15 @@ async function menuMissao(idPersonagem, personagens, expansoes, races, items, qu
     }
     let continuar = true;
     do {
-        let idMissao = parseInt(await useQuestion(''));
+        let idMissao = await useQuestion('');
 
-        let cheat = verificarCheat(idMissao, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+        let cheat = verificarCheat(idMissao);
         if (cheat) {
-            console.log(cheat);
+            personagens[idPersonagem] = utilizarCheat(idMissao, idPersonagem, personagens)
             localStorage.setObject('personagens', personagens);
-            localStorage.setObject('expansoes', expansoes);
         }
-        else if (idMissao == undefined) {
+        idMissao = parseInt(idMissao)
+        if (idMissao == undefined) {
             console.log('Digite uma opção');
         }
         else if (idMissao !== idMissao || idMissao < 0 || idMissao > quests.length) {
@@ -303,14 +309,18 @@ async function menuCriarPersonagem(personagens, expansoes, races, items, quests)
     }
     let continuar = true;
     do {
-        let idRaca = parseInt(await useQuestion(''));
+        let idRaca = await useQuestion('');
 
-        let cheat = verificarCheat(idRaca, nenhumPersonagemSelecionado, personagens, expansoes, races, items, quests);
+        let cheat = verificarCheat(idRaca);
         if (cheat) {
-            console.log(cheat);
+            if(verificaCheatGlobal(idRaca)){
+                personagens = utilizarCheat(idRaca, nenhumPersonagemSelecionado, personagens)
+            }else{
+                console.log('Não é possível utilizar este comando aqui')
+            }
             localStorage.setObject('personagens', personagens);
-            localStorage.setObject('expansoes', expansoes);
         }
+        idRaca = parseInt(idRaca)
         if (idRaca == undefined) {
             console.log('Digite uma opção');
         }
