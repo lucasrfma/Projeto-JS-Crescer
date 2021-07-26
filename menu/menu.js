@@ -508,6 +508,10 @@ async function menuCriarPersonagem(personagens, expansoes, races, items, quests)
             else if ( Number.isNaN(idRaca) || idRaca < 0 || idRaca > races.length) {
                 console.log('Opção inválida!');
             }
+            else if ( idRaca == 0 )
+            {
+                continuar = false;
+            }
             else {
                 try {
                     personagens.push(criarPersonagem(nome, idRaca, races, expansoes, personagens));
