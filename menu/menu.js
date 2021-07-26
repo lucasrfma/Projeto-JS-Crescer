@@ -427,8 +427,17 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
             console.log('Nenhum item equipado nesse personagem.')
         }else{
             personagens[idPersonagem].equipamentos.forEach((item, index) => {
-                console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
-                item.aprimoramento + ' preco: ' + item.preco)
+                if( item.preco === undefined )
+                {
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: item mítico, não vendável')
+
+                }
+                else
+                {
+                    console.log((index + 1) + '-' + item.nome + ': ' + item.tipo + ' valor do bonus: ' + 
+                    item.aprimoramento + ' preco: ' + item.preco)
+                }
             })
         }
         console.log('\nDigite uma opção: ');
@@ -446,10 +455,18 @@ Dinheiro do personagem: ${personagens[idPersonagem].dinheiro}
             }
             else
             {
-                const personagemAtualizado = realizarVenda(idPersonagem, 
-                    personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens);
-                personagens[idPersonagem] = personagemAtualizado;
-                localStorage.setObject('personagens', personagens);
+                if( personagens[idPersonagem].equipamentos[opcao - 1].preco === undefined )
+                {
+                    console.log('Esse item não pode ser vendido.');
+                    await useQuestion('Pressione enter para continuar.')
+                }
+                else
+                {
+                    const personagemAtualizado = realizarVenda(idPersonagem, 
+                        personagens[idPersonagem].equipamentos[opcao - 1].id, personagens, itens);
+                    personagens[idPersonagem] = personagemAtualizado;
+                    localStorage.setObject('personagens', personagens);
+                }
             }
         }
         personagens = localStorage.getObject('personagens');
