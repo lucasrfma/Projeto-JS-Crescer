@@ -34,6 +34,7 @@ async function main() {
 
 1 - Criar Personagem
 2 - Selecionar Personagem
+3 - Listar Expansões Liberadas
 
 X - Sair
         `)).toUpperCase();
@@ -46,6 +47,8 @@ X - Sair
             case '2':
                 await selecionarPersonagem(personagens, expansoes, races, items, quests);
                 break;
+            case '3':
+                listarExpansoes(expansoes,items);
             case 'X':
                 break;
             default:
@@ -59,6 +62,28 @@ X - Sair
             await useQuestion('Aperte enter para continuar.');
         }
     }while(opcao !== 'X');
+
+}
+
+function listarExpansoes(expansoes,items)
+{
+    let expansoesDetalhadas = items.filter( (item) => {
+        if( item.tipo == 'EXPANSAO' )
+        {
+            return expansoes.includes(item.idExpansao);
+        }
+        return false;
+    });
+
+    expansoesDetalhadas = expansoesDetalhadas.sort( (a,b) => {
+        return a.idExpansao - b.idExpansao;
+    });
+    
+    console.log('\nExpansões liberadas:\n');
+    expansoesDetalhadas.forEach( (expansao) => {
+        console.log('id: ' + expansao.idExpansao + ' Nome: ' + expansao.nome);
+    });
+    console.log();
 
 }
 
@@ -493,7 +518,14 @@ async function menuCriarPersonagem(personagens, expansoes, races, items, quests)
 `);
 
     for (let i = 0; i < races.length; ++i) {
-        console.log(races[i].id + ' - ' + races[i].raca);
+        if( races[i].tipo === 'ALIADA')
+        {
+            console.log(`${races[i].id} - ${races[i].raca}\tidExpansao: ${races[i].idExpansao}\tRequisito Lvl: ${races[i].lvlMinimoParaObter}`);
+        }
+        else
+        {
+            console.log(races[i].id + ' - ' + races[i].raca);
+        }
     }
     let continuar = true;
     do {
