@@ -23,6 +23,14 @@ export const criarPersonagem = (nome, idRaca, racas, expansoes = [0], personagen
     }
   }
 
+  for(let i = 0; i < personagens.length; ++i)
+  {
+    if( personagens[i].nome === nome )
+    {
+      throw new Error('Já existe um personagem com esse nome!')
+    }
+  }
+
   const personagem = {
     nome: nome,
     raca: raca,

@@ -148,6 +148,13 @@ describe('testes criação personagem', () => {
     expect(personagemObtido).toEqual(personagemEsperado)
   })
 
+  it('Não deve conseguir criar um personagem com nome repetido', () => {
+
+    expect( () => {
+      const segundoArthas = criarPersonagem('Arthas', 1, racas, expansoes, personagens)
+    }).toThrow('Já existe um personagem com esse nome!')
+  })
+
   it('Não deve conseguir criar um personagem com raça aliada se não possuir outro personagem com o lvl mínimo necessário', () => {
 
     expect(() => { criarPersonagem('Ecologista', 12, racas, expansoes) }).toThrow('Você não possui um personagem com o nivel minimo para criar personagens dessa raça!.')

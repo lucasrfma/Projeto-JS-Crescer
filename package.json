@@ -1,7 +1,7 @@
 {
   "name": "world-of-ecrescer",
   "scripts": {
-    "start": "babel-node index.js",
+    "start": "babel-node ./menu/menu.js",
     "menu": "babel-node ./menu/menu.js",
     "test": "jest"
   },
