@@ -1,3 +1,7 @@
+Projeto proposto pelo curso Crescer da CWI Software.
+
+Feito em conjunto com o [Alysson Aldrin](https://github.com/alyssonaldrin) e Augusto Kernath.
+
 ![](https://cdn.ome.lt/ztAQkeYbxnk2jh4BQJFYhK77Fi4=/1200x630/smart/extras/conteudos/world-of-warcraft_32cZI3g.jpg)
 # TCC - World of E-crescer
 
